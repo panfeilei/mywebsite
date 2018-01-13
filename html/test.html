@@ -3,7 +3,9 @@
     <head>
         <title>my test</title>
         <meta charset="utf-8"/>
-        
+        <link rel="stylesheet" href="css/mycss.css"></link>
+        <script type="text/javascript" src="D:/bootstrap/js/jquery.min.js"></script>
+        <script src="js/myjs.js"></script>
         <style>
             img{
                 text-align:center;
@@ -11,36 +13,14 @@
         </style>
     </head>
     <body>
-        <ul>
-            <li><a href="img/img1.jpg" onclick="testclick(this);return false;">img1</a></li>
-            <li><a href="img/img2.jpg" onclick="testclick(this);return false;">img2</a></li>
-            <li><a href="img/img3.jpg" onclick="testclick(this);return false;">img3</a></li>
+        <ul id="mainlist">
+            <li><a href="#">img1</a></li>
+            <li><a href="#">img2</a></li>
+            <li><a href="#">img3</a></li>
         </ul>
-        <div style="position:relative;">
+        <div style="position:relative;display:none" display>
             <img id="myimg" height=500px width=500pxs><a style="position:absolute; z-index:2; left:10px; top:10px">asdasdasd</a></img>
-            
         </div>
-        
-        <div id="mydiv"> 
-        </div>
-
+        <button id="testbu">button</button>
     </body>
-
-    <script>
-        function testclick(item){
-            var link = item.getAttribute("href");
-            var im = document.getElementById("myimg");
-            im.setAttribute("src", link);
-        }
-        
-        window.onload = function(){
-            var para = document.createElement("p");
-            var testdiv = document.getElementById("mydiv");
-            testdiv.appendChild(para);
-        }
-        var o = new Object();
-        o.name = "hee";
-        alert(o.name);
-        
-    </script>
 </html>
