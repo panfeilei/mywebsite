@@ -1,3 +1,10 @@
+.mainlistSearch
+{
+    border-radius:30px;
+    background:#ED5565;
+    border:thin solid #FFFFFF;
+    outline:none;
+}
 
 #mainlist
 {
@@ -20,6 +27,18 @@
     text-decoration:none;
 }
 
+#mainlist a+ul
+{
+    display:none;
+    position:relative;
+    background:#000000;
+    padding:14px 20px;
+    border-bottom: solid 1px #DA4453;
+    color:white;
+    overflow: hidden;
+    text-decoration:none;
+}
+
 #mainlist a:hover
 {
     background:#DA4453;
@@ -28,7 +47,7 @@
 .ink{
     display:block;
     position:absolute;
-    background-color:rgba(0,0,0,0.3);
+    background-color:rgba(255,255,255,0.3);
     border-radius:100%;
     transform: scale(0); 
 }
