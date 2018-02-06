@@ -9,11 +9,13 @@
 #mainlist
 {
     background:#ED5565;
+    position:fixed;
     width:260px;
     height:800px;
     box-shadow:5px 0 20px #333;
     list-style-type:none;
-    padding:0px;    
+    padding:0px;   
+    z-index:3;
 }
 
 #mainlist a
