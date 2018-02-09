@@ -24,7 +24,7 @@ SECRET_KEY = '9y1annj5xz4kd84v18#-a&@8-7=$itt=+4m&!^i5xm5_o94_hp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+DEFAULT_CHARSET='utf-8' 
 ALLOWED_HOSTS = []
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (

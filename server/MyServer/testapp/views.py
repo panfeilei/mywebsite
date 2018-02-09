@@ -5,14 +5,15 @@ from django.contrib.auth import authenticate
 class dd():
     f=4
 def login(request):
-    print("get login")
+    #print("get login")
     username=request.GET.get('user')
     password=request.GET.get('pwd')
     user=authenticate(username=username, password=password)
     if user is not None:
-        return HttpResponse("login success");
+        print(user.password)
+        return render(request, 'login.html',context={'loginStatus':'True'})
     else:
-        return render(request, 'login.html')
+        return render(request, 'login.html', context={'loginStatus':'False'})
     
 def testpost(request):
     #print("get user"+request.GET.get('user', ''))

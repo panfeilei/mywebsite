@@ -17,12 +17,17 @@
     </head>
     <body style=" padding-top: 50px;">
         {%include 'head.html'%}
+        {% if loginStatus == 'True' %}
+        <p>login Success</p>
+        {%else%}
         {%csrf_token %}
         <form action="{%url 'login'%}" method="get">
             <input type="text"  name="user"></input>
             <input type="text" name="pwd" ></input>
             <input type="submit" value="login"></input>
         </form>
+        {% endif %}
+        
     </body>
 <html>
 
