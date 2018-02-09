@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Home</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{% static "css/mycss.css" %}"></link>
+    </head>
+
+    <body style=" padding-top: 50px;">
+        {%include 'head.html'%}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-3 col-md-3">
+                    <ul id="mainlist">
+                        <li>
+                            <a href="#">img1</a>
+                            <ul id="innerul">
+                                <li>item1</li>
+                                <li>item2</li>
+                                <li>item3</li>
+                            </ul>
+                        </li>
+                        <li><a href="#">img2</a>
+                        </li>
+                        <li><a href="#">img3</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-xs-6 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12" >
+                            <div style="border-bottom:solid 2px black;margin:8px;">
+                                <label>New</label>
+                                <a style="float:right">more>></a>
+
+                            </div>
+                            <ul class="NewList" style="list-style:none;">
+                                <li>
+                                    <div class="headImg" style="width:30px;height:30px;margin-right:20px;display:inline-block">
+                                        <a href="#" >
+                                            <img src="#"></img>
+                                        </a>
+                                    </div>
+                                    <div class="NewListItem" style="vertical-align:top;display:inline-block">
+                                        <p class="NewListItemTitle">title</p>
+                                        <p class="NewListItemDescript">Descript</p>
+                                    </div>
+                                    <!-- <div style= "display:inline "> DIV1 </div>  -->
+                                    <!-- <div style= "display:inline "> DIV2 </div>  -->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

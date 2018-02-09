@@ -1,6 +1,28 @@
-<form action="http://127.0.0.1:8002/test/" method="get">
-    <input type="text"  name="user"></input>
-    <input type="text" name="pwd" ></input>
-    <input type="submit" value="login"></input>
-    <!-- <input type="submit" value="register"></input> -->
-</form>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>  
+        <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style>
+        .myhomelist_item{
+            background-color: #2C3339;
+            color: black;
+            width: 100px;
+        }
+        </style>
+    </head>
+    <body style=" padding-top: 50px;">
+        {%include 'head.html'%}
+        <form action="http://127.0.0.1:8002/test/" method="get">
+            <input type="text"  name="user"></input>
+            <input type="text" name="pwd" ></input>
+            <input type="submit" value="login"></input>
+        </form>
+    </body>
+<html>
+
+    

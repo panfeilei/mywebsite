@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from testapp import views as test_view
 urlpatterns = [
+    url(r"^", test_view.index),
     url(r'^admin/', admin.site.urls),
     url(r'^login/', test_view.login),
     url(r'^test/', test_view.testpost),
