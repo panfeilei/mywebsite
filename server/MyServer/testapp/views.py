@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext,Template
+from DjangoUeditor.models import UEditorField
 # Create your views here.
 class dd():
     f=4
