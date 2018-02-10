@@ -23,8 +23,9 @@ urlpatterns = [
     url(r"^index", test_view.index),
     url(r'^admin/', admin.site.urls),
     url(r'^login/', test_view.mylogin,name='login'),
-    url(r'^test/', test_view.testpost),
+    url(r'^test1/', test_view.testpost),
     #url(r'^tinymce/', include('tinymce.urls')),
     url(r'^editor/',test_view.editor),
     url(r'^constrol/', editor_view.get_ueditor_controller),
+    url(r'^test/',test_view.test),
 ]
