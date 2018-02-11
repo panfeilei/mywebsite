@@ -41,7 +41,8 @@ def test(request):
             img = request.FILES.get('upfile')
             print(request.FILES)
             print(img.size)
-            imgt = open(settings.MEDIA_ROOT+"fff.jpg", "wb+")
+            print(settings.MEDIA_ROOT)
+            imgt = open(settings.MEDIA_ROOT+"\\fff.jpg", "wb+")
             for l in img.chunks():
                 imgt.write(l)
             imgt.close()
