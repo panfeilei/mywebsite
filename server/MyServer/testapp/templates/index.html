@@ -15,7 +15,7 @@
         {%include 'head.html'%}
         <div class="container-fluid" style="padding-left: 0px;">
             <div class="row">
-                <div class="col-xs-3 col-md-3">
+                <div class="col-xs-2 col-md-2">
                     <ul id="mainlist">
                         <li>
                             <a href="#">img1</a>
@@ -39,6 +39,7 @@
                                 <a style="float:right">more>></a>
                             </div>
                             <ul class="NewList" style="list-style:none;">
+                                {% for newblog in blog_list%}
                                 <li>
                                     <div class="headImg" style="width:30px;height:30px;margin-right:20px;display:inline-block">
                                         <a href="#" >
@@ -46,14 +47,18 @@
                                         </a>
                                     </div>
                                     <div class="NewListItem" style="vertical-align:top;display:inline-block">
-                                        <a class="NewListItemTitle">title</a>
-                                        <p class="NewListItemDescript">Descript</p>
+                                        <a class="NewListItemTitle">{{newblog.title}}</a>
+                                        <p class="NewListItemDescript">{{newblog.content}}</p>
                                     </div>
                                 </li>
+                                {% endfor%}
                             </ul>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+            sadasd
             </div>
         </div>
     </div>

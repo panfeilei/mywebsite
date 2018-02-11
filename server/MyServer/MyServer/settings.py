@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'testapp',
-    'tinymce',
     'DjangoUeditor',
 ]
 
@@ -125,5 +124,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+MEDIA_URL="/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
 STATIC_URL = '/static/'
