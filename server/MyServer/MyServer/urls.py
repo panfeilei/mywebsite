@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 from testapp import views as test_view
+from django.contrib.staticfiles import views as sview
 from DjangoUeditor import views as editor_view
-
+from django.conf.urls.static import static
+from django.views.static import serve
+from django.conf import settings
 urlpatterns = [
     url(r"^$", test_view.index),
     url(r"^index", test_view.index),
@@ -28,4 +31,5 @@ urlpatterns = [
     url(r'^editor/',test_view.editor),
     url(r'^constrol/', editor_view.get_ueditor_controller),
     url(r'^test/',test_view.test),
+    url(r'^media/(?P<path>.*)/$', serve, {"document_root": settings.MEDIA_ROOT}),
 ]

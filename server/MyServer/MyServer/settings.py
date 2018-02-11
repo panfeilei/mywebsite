@@ -24,11 +24,14 @@ SECRET_KEY = '9y1annj5xz4kd84v18#-a&@8-7=$itt=+4m&!^i5xm5_o94_hp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DEFAULT_CHARSET='utf-8' 
+DEFAULT_CHARSET='utf-8'
 ALLOWED_HOSTS = []
+MEDIA_URL="/media2/"
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
+    "E:/temp/QQ_Images/",
 )
 # Application definition
 ALLOWED_HOSTS = ['*']
@@ -124,6 +127,4 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-MEDIA_URL="/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-STATIC_URL = '/static/'
+

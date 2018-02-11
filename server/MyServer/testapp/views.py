@@ -40,13 +40,13 @@ def test(request):
         if action == 'uploadimage':
             img = request.FILES.get('upfile')
             print(request.FILES)
-            print(img.size)
+            print(img)
             print(settings.MEDIA_ROOT)
             imgt = open(settings.MEDIA_ROOT+"\\fff.jpg", "wb+")
             for l in img.chunks():
                 imgt.write(l)
             imgt.close()
-            return HttpResponse('{"state": "SUCCESS","url": "demo.jpg","title": "demo.jpg", "original": "demo.jpg"}')
+            return HttpResponse('{"state": "SUCCESS","url": "http://127.0.0.1:8000/media/em.png","title": "dem_title.jpg", "original": "demo_original.jpg"}'  )
         else:
             title = request.POST.get('title')
             content = request.POST.get('content')
