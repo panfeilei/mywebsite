@@ -7,6 +7,7 @@ from DjangoUeditor.models import UEditorField
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from testapp.models import  Blog as test_blog
+from testapp.models import testmedel
 from django.utils.http import urlquote
 from django.template.loader import render_to_string
 # Create your views here.
@@ -30,7 +31,8 @@ def mylogin(request):
 
 def testpost(request):
     #print("get user"+request.GET.get('user', ''))
-    return HttpResponse('logindddtest')
+    t = testmedel()
+    return render(request, 'test.html', {'testmedel':t})
 
 def editor(request):
     return render(request, 'editor.html')
