@@ -8,4 +8,6 @@ class MyUser(models.Model):
 
 class Blog(models.Model):
     title = models.CharField(max_length=50)
+    link = models.URLField()
+    descript =  models.CharField(max_length=100,null=True)
     content = models.TextField()

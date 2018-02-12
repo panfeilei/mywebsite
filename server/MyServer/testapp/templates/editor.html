@@ -12,10 +12,11 @@
         var editor = UE.getEditor('container');
         $(function(){
             $('#blogSubmit').click(function(){
-                 var tmp = editor.getContentTxt();
+                 var descript = editor.getContentTxt();
+                 var content = editor.getContent();
                 <!-- console.log(tmp);  -->
                 var title = $("#blogTitle").val()
-                $.post("../test/", {'title':title,"content":tmp});
+                $.post("../test/", {'title':title,"descript":descript,"content":content});
             });
         
         });

@@ -1,22 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Home</title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>  
-        <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <style>
-        .myhomelist_item{
-            background-color: #2C3339;
-            color: black;
-            width: 100px;
-        }
-        </style>
-    </head>
-    <body style=" padding-top: 50px;">
-        {%include 'head.html'%}
+
+{% extends 'base.html'%}
+{% block Htmlcontent%}
         {% if loginStatus == 'True' %}
         <p>login Success</p>
         {%else%}
@@ -27,8 +11,6 @@
             <input type="submit" value="login"></input>
         </form>
         {% endif %}
-        
-    </body>
-<html>
+{%endblock%}
 
     

@@ -1,0 +1,7 @@
+{% extends 'base.html'%}
+{% block Htmlcontent%}
+    <div style="margin:20px;width:100%;">
+        <div id="BlogTitle" style="width:100%;text-align:center;font-size:30px;">{{Blog.title}}</div>
+        <div id="BlogContend">{{Blog.content|safe}}</div>
+    </div>
+{% endblock %}

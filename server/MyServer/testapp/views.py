@@ -7,6 +7,8 @@ from DjangoUeditor.models import UEditorField
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from testapp.models import  Blog as test_blog
+from django.utils.http import urlquote
+
 # Create your views here.
 class dd():
     f=4
@@ -32,6 +34,13 @@ def testpost(request):
 
 def editor(request):
     return render(request, 'editor.html')
+
+def blog_view(request):
+    title = request.GET.get("title")
+    print(title)
+    #return HttpResponse('fff')
+    Blog = test_blog.objects.get(title=title)
+    return render(request, 'blog.html', {'Blog':Blog})
     
 @csrf_exempt
 def test(request):
@@ -42,17 +51,19 @@ def test(request):
             print(request.FILES)
             print(img)
             print(settings.MEDIA_ROOT)
-            imgt = open(settings.MEDIA_ROOT+"\\fff.jpg", "wb+")
+            imgt = open(settings.MEDIA_ROOT+"\\"+img.name, "wb+")
             for l in img.chunks():
                 imgt.write(l)
             imgt.close()
-            return HttpResponse('{"state": "SUCCESS","url": "http://127.0.0.1:8000/media/em.png","title": "dem_title.jpg", "original": "demo_original.jpg"}'  )
+            return HttpResponse('{"state": "SUCCESS","url": "http://127.0.0.1:8000/media/%s","title": "dem_title.jpg", "original": "demo_original.jpg"}' %img.name )
         else:
             title = request.POST.get('title')
             content = request.POST.get('content')
-            b = test_blog(title=title, content=content)
+            descript = request.POST.get('descript')
+            link = "http://127.0.0.1:8000/blog?title=%s" %  urlquote(title)
+            b = test_blog(title=title, content=content, link=link, descript=descript)
             b.save()
-            print(title)
+            print("link is " + urlquote(link))
     t = Template(r'{"imageActionName":"uploadimage","imageFieldName":"upfile","imageMaxSize":2048000,"imageAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"imageCompressEnable":true,"imageCompressBorder":1600,"imageInsertAlign":"none","imageUrlPrefix":"","imagePathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","scrawlActionName":"uploadscrawl","scrawlFieldName":"upfile","scrawlPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","scrawlMaxSize":2048000,"scrawlUrlPrefix":"","scrawlInsertAlign":"none","snapscreenActionName":"uploadimage","snapscreenPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","snapscreenUrlPrefix":"","snapscreenInsertAlign":"none","catcherLocalDomain":["127.0.0.1","localhost","img.baidu.com"],"catcherActionName":"catchimage","catcherFieldName":"source","catcherPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","catcherUrlPrefix":"","catcherMaxSize":2048000,"catcherAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"videoActionName":"uploadvideo","videoFieldName":"upfile","videoPathFormat":"\/server\/ueditor\/upload\/video\/{yyyy}{mm}{dd}\/{time}{rand:6}","videoUrlPrefix":"","videoMaxSize":102400000,"videoAllowFiles":[".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid"],"fileActionName":"uploadfile","fileFieldName":"upfile","filePathFormat":"\/server\/ueditor\/upload\/file\/{yyyy}{mm}{dd}\/{time}{rand:6}","fileUrlPrefix":"","fileMaxSize":51200000,"fileAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp",".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid",".rar",".zip",".tar",".gz",".7z",".bz2",".cab",".iso",".doc",".docx",".xls",".xlsx",".ppt",".pptx",".pdf",".txt",".md",".xml"],"imageManagerActionName":"listimage","imageManagerListPath":"\/server\/ueditor\/upload\/image\/","imageManagerListSize":20,"imageManagerUrlPrefix":"","imageManagerInsertAlign":"none","imageManagerAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"fileManagerActionName":"listfile","fileManagerListPath":"\/server\/ueditor\/upload\/file\/","fileManagerUrlPrefix":"","fileManagerListSize":20,"fileManagerAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp",".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid",".rar",".zip",".tar",".gz",".7z",".bz2",".cab",".iso",".doc",".docx",".xls",".xlsx",".ppt",".pptx",".pdf",".txt",".md",".xml"]}')
     req = RequestContext(request)
     return HttpResponse(t.render(req))
