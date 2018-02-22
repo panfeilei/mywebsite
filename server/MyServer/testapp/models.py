@@ -13,4 +13,5 @@ class Blog(models.Model):
     content = models.TextField()
 
 class testmedel(forms.Form):
-    t = forms.CharField(max_length=50)
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()

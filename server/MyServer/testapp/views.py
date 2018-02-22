@@ -32,7 +32,8 @@ def mylogin(request):
 def testpost(request):
     #print("get user"+request.GET.get('user', ''))
     t = testmedel()
-    return render(request, 'test.html', {'testmedel':t})
+    print("get user")
+    return render(request, 'test.html', {'testfiled':t})
 
 def editor(request):
     return render(request, 'editor.html')
