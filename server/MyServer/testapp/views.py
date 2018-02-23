@@ -75,7 +75,7 @@ def test(request):
 def index(request):
     t = loader.get_template('index.html')
     blog_list = test_blog.objects.all()
-    context = {'blog_list': blog_list}
-    #return HttpResponse(t.render(context))
-    #function render is force use RequestContext
+    context = {}
+    if blog_list:
+        context = {'blog_list': blog_list}
     return render(request, 'index.html', context)
