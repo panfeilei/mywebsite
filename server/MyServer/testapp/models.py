@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, AbstractBaseUser,BaseUserManager,Ab
 from django import forms
 from django.utils.http import urlquote
 # Create your models here.
-class MyUser(AbstractUser):
+class MyUser(AbstractBaseUser):
     username = models.CharField(max_length=50, unique=True, default="")
     userid = models.IntegerField(unique=True, default=0)
     headlink = models.CharField(max_length=50, default="ssdasdasda")
@@ -16,10 +16,10 @@ class Blog(models.Model):
     descript =  models.CharField(max_length=100,null=True)
     content = models.TextField()
     
-
 class Comment(models.Model):
-    comment_id = models.CharField(primary_key=True,unique=True,max_length=100)
-    userid = models.IntegerField(unique=True)
+    #comment_id = models.CharField(primary_key=True,unique=True,max_length=100)
+    comment_id = models.AutoField(primary_key=True)
+    to_blogId = models.IntegerField()
     time = models.DateTimeField(auto_now=True)
     content = models.TextField()
     username = models.CharField(max_length=20)
@@ -27,8 +27,9 @@ class Comment(models.Model):
     test = models.CharField(max_length=100)
     
 class Reply(models.Model):
-    reply_id = models.CharField(primary_key=True,unique=True,max_length=100)
-    to_userId = models.IntegerField(unique=True, default=0)
+    #reply_id = models.CharField(primary_key=True,unique=True,max_length=100)
+    reply_id = models.AutoField(primary_key=True)
+    to_commentId = models.IntegerField()
     username = models.CharField(max_length=20)
     content = models.TextField()
     time = models.DateTimeField(auto_now=True)

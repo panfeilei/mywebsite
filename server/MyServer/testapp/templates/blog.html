@@ -17,7 +17,7 @@
         var comment = {}
         <!-- alert(getUrlParam('id')) -->
         comment['content'] = $("#comment_text").val()
-        comment['comment_id'] = getUrlParam('id')
+        comment['to_blogId'] = getUrlParam('id')
         $.post("/uploadData/?action=uploadComment",comment);
     }
 </script>
