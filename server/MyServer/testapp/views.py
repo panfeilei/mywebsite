@@ -79,12 +79,11 @@ def uploadData(request):
     elif action == "uploadComment":
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
-        username = request.user.username
-        headlink = request.user.headlink
-        userid = hash(username)
+        #username = request.user.username
+        #headlink = request.user.headlink
+        userid = request.user.id
         print('userid is %d' %userid)
-        c = Comment(content=content, to_blogId=to_blogId, username=username, headlink=headlink)
-        #c = Comment(content=content, comment_id=comment_id, username=username, headimg=headimg)
+        c = Comment(content=content, to_blogId=to_blogId, userid=userid)
         c.save()
         return HttpResponse('ok')
 
