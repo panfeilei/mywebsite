@@ -15,8 +15,8 @@
                  var descript = editor.getContentTxt();
                  var content = editor.getContent();
                 <!-- console.log(tmp);  -->
-                var title = $("#blogTitle").val()
-                $.post("../test/", {'title':title,"descript":descript,"content":content});
+                var title = $("#blogTitle").val();
+                $.post("/uploadData/?action=uploadBlog", {'title':title,"descript":descript,"content":content});
             });
         
         });

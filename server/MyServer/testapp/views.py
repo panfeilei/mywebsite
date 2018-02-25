@@ -7,13 +7,13 @@ from DjangoUeditor.models import UEditorField
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from testapp.models import  Blog as test_blog
+from testapp.models import  Comment
 from testapp.models import testmedel
 from django.utils.http import urlquote
 from django.template.loader import render_to_string
+import time
+import operator
 # Create your views here.
-class dd():
-    f=4
-
 
 def mylogin(request):
     print("get login")
@@ -40,9 +40,9 @@ def editor(request):
 
 def blog_view(request):
     title = request.GET.get("title")
+    blog_id = request.GET.get("id")
     print(title)
-    #return HttpResponse('fff')
-    Blog = test_blog.objects.get(title=title)
+    Blog = test_blog.objects.get(title=title, blog_id=blog_id)
     return render(request, 'blog.html', {'Blog':Blog})
     
 @csrf_exempt
@@ -59,18 +59,38 @@ def test(request):
                 imgt.write(l)
             imgt.close()
             return HttpResponse('{"state": "SUCCESS","url": "http://127.0.0.1:8000/media/%s","title": "dem_title.jpg", "original": "demo_original.jpg"}' %img.name )
-        else:
-            title = request.POST.get('title')
-            content = request.POST.get('content')
-            descript = request.POST.get('descript')
-            link = "http://127.0.0.1:8000/blog?title=%s" %  urlquote(title)
-            b = test_blog(title=title, content=content, link=link, descript=descript)
-            b.save()
-            print("link is " + urlquote(link))
     t = Template(r'{"imageActionName":"uploadimage","imageFieldName":"upfile","imageMaxSize":2048000,"imageAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"imageCompressEnable":true,"imageCompressBorder":1600,"imageInsertAlign":"none","imageUrlPrefix":"","imagePathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","scrawlActionName":"uploadscrawl","scrawlFieldName":"upfile","scrawlPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","scrawlMaxSize":2048000,"scrawlUrlPrefix":"","scrawlInsertAlign":"none","snapscreenActionName":"uploadimage","snapscreenPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","snapscreenUrlPrefix":"","snapscreenInsertAlign":"none","catcherLocalDomain":["127.0.0.1","localhost","img.baidu.com"],"catcherActionName":"catchimage","catcherFieldName":"source","catcherPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","catcherUrlPrefix":"","catcherMaxSize":2048000,"catcherAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"videoActionName":"uploadvideo","videoFieldName":"upfile","videoPathFormat":"\/server\/ueditor\/upload\/video\/{yyyy}{mm}{dd}\/{time}{rand:6}","videoUrlPrefix":"","videoMaxSize":102400000,"videoAllowFiles":[".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid"],"fileActionName":"uploadfile","fileFieldName":"upfile","filePathFormat":"\/server\/ueditor\/upload\/file\/{yyyy}{mm}{dd}\/{time}{rand:6}","fileUrlPrefix":"","fileMaxSize":51200000,"fileAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp",".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid",".rar",".zip",".tar",".gz",".7z",".bz2",".cab",".iso",".doc",".docx",".xls",".xlsx",".ppt",".pptx",".pdf",".txt",".md",".xml"],"imageManagerActionName":"listimage","imageManagerListPath":"\/server\/ueditor\/upload\/image\/","imageManagerListSize":20,"imageManagerUrlPrefix":"","imageManagerInsertAlign":"none","imageManagerAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"fileManagerActionName":"listfile","fileManagerListPath":"\/server\/ueditor\/upload\/file\/","fileManagerUrlPrefix":"","fileManagerListSize":20,"fileManagerAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp",".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid",".rar",".zip",".tar",".gz",".7z",".bz2",".cab",".iso",".doc",".docx",".xls",".xlsx",".ppt",".pptx",".pdf",".txt",".md",".xml"]}')
     req = RequestContext(request)
     return HttpResponse(t.render(req))
+    
+@csrf_exempt
+def uploadData(request):
+    action = request.GET.get('action')
+    if action == "uploadBlog":
+        now = time.time()
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        descript = request.POST.get('descript')
+        blog_id = str(hash(str(now) + title))
+        link = "http://127.0.0.1:8000/blog?title=%s&id=%s" %  (urlquote(title), blog_id)
+        b = test_blog(title=title, content=content, link=link, descript=descript, blog_id = blog_id)
+        b.save()
+        return HttpResponse('ok')
+    elif action == "uploadComment":
+        content = request.POST.get('content')
+        comment_id = request.POST.get('comment_id')
+        userid = 5
+        print('userid is %d' % userid)
+        #username = request.user.username
+        #headimg = request.user.headlink
+        c = Comment(content=content, comment_id=comment_id, userid=userid)
+        #c = Comment(content=content, comment_id=comment_id, username=username, headimg=headimg)
+        c.save()
+        return HttpResponse('ok')
 
+def getdata(request):
+    return HttpResponse('None')
+    
 @login_required
 def index(request):
     t = loader.get_template('index.html')

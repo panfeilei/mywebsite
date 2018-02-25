@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'testapp',
     'DjangoUeditor',
 ]
-
+AUTH_USER_MODEL = 'testapp.MyUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

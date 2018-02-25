@@ -1,4 +1,27 @@
 {% extends 'base.html'%}
+{% block Jscontent%}
+<script>
+    $(function(){
+        $.get("/getdata/?action=getComment",function(data, status){
+            
+        })
+    })
+    
+    function getUrlParam(name){
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg); //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值 
+    }
+    
+    function uploadComment(){
+        var comment = {}
+        <!-- alert(getUrlParam('id')) -->
+        comment['content'] = $("#comment_text").val()
+        comment['comment_id'] = getUrlParam('id')
+        $.post("/uploadData/?action=uploadComment",comment);
+    }
+</script>
+{% endblock %}
 {% block Htmlcontent%}
 <div class="container-fluid" style="padding-left: 0px;">
     <div class="row">
@@ -12,17 +35,18 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-            commont
+            comment
             </h3>
         </div>
         <div class="panel-body">
             <div style="border-bottom:2px #269abc solid;height:100px; margin-bottom:20px;">
-                <form>
-                    <textarea style="resize: none;width:100%;" required></textarea>
-                    <button class="btn btn-info" type="submit" style="float:right">ok</button>
+                <form method="post" action="##" onsubmit="return false">
+                    {% csrf_token %}
+                    <textarea id="comment_text" style="resize: none;width:100%;" required></textarea>
+                    <button class="btn btn-info" type="submit" style="float:right" onclick="uploadComment()">ok</button>
                 </form>
             </div>
-            <div id="commont-content">
+            <div id="comment-content">
                 <ul class="media-list">
                     <li class="media">
                         <div class="media-left">
@@ -32,13 +56,13 @@
                         </div>
                         <div class="media-body">
                             <h4>username</h4>
-                            <p>commont-content</p>
-                            <div id="commont-foot">
+                            <p>comment-content</p>
+                            <div id="comment-foot">
                                 <span>2018.01.22</span>
                                 <a>reply</a>
                             </div>
                             <div>
-                                <ul id="commont-in" style="list-style:none;" class="media-list">
+                                <ul id="comment-in" style="list-style:none;" class="media-list">
                                     <li class="media">
                                         <div class="media-left">
                                             <a>
@@ -47,7 +71,7 @@
                                         </div>
                                         <div class="media-body">
                                         reply
-                                            <div id="commont-foot">
+                                            <div id="comment-foot">
                                                 <span>2018.01.22</span>
                                                 <a>reply</a>
                                             </div>
@@ -65,3 +89,5 @@
     </div>
 </div>
 {% endblock %}
+
+
