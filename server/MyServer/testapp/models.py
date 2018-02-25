@@ -23,8 +23,7 @@ class Comment(models.Model):
     time = models.DateTimeField(auto_now=True)
     content = models.TextField()
     username = models.CharField(max_length=20)
-    headimg = models.CharField(max_length=50)
-    test = models.CharField(max_length=100)
+    headlink = models.CharField(max_length=100)
     
 class Reply(models.Model):
     #reply_id = models.CharField(primary_key=True,unique=True,max_length=100)

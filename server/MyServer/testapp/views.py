@@ -80,10 +80,10 @@ def uploadData(request):
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
         username = request.user.username
-        headimg = request.user.headlink
+        headlink = request.user.headlink
         userid = hash(username)
         print('userid is %d' %userid)
-        c = Comment(content=content, to_blogId=to_blogId)
+        c = Comment(content=content, to_blogId=to_blogId, username=username, headlink=headlink)
         #c = Comment(content=content, comment_id=comment_id, username=username, headimg=headimg)
         c.save()
         return HttpResponse('ok')
