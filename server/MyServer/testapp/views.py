@@ -79,8 +79,8 @@ def uploadData(request):
     elif action == "uploadComment":
         content = request.POST.get('content')
         comment_id = request.POST.get('comment_id')
-        userid = 5
-        print('userid is %d' % userid)
+        userid = 7
+        print('userid is '+request.user.headlink)
         #username = request.user.username
         #headimg = request.user.headlink
         c = Comment(content=content, comment_id=comment_id, userid=userid)

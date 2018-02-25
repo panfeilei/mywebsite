@@ -3,14 +3,12 @@ from django.contrib.auth.models import User, AbstractBaseUser,BaseUserManager,Ab
 from django import forms
 from django.utils.http import urlquote
 # Create your models here.
-class MyUser(AbstractBaseUser):
+class MyUser(AbstractUser):
     username = models.CharField(max_length=50, unique=True, default="")
     userid = models.IntegerField(unique=True, default=0)
     headlink = models.CharField(max_length=50, default="ssdasdasda")
     USERNAME_FIELD = 'username'
 
-
-    
 class Blog(models.Model):
     blog_id = models.CharField(primary_key=True,unique=True,max_length=100)
     title = models.CharField(max_length=50)
