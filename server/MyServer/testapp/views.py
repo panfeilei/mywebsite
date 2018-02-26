@@ -11,6 +11,7 @@ from testapp.models import  Comment, Reply
 from testapp.models import testmedel
 from django.utils.http import urlquote
 from django.template.loader import render_to_string
+import json
 import time
 import operator
 # Create your views here.
@@ -91,10 +92,15 @@ def getdata(request):
     action = request.GET.get('action')
     if action == "getComment":
         blog_id = request.GET.get('blogid')
-        comment_table = {}
-        comment = Comment.objects.filter(to_blogId=to_blogId)
-        reply_all =  Reply.objects.filter(to_blogId=to_blogId)
+        comment_list = []
+        comment = Comment.objects.filter(to_blogId=blog_id).order_by('time')
+        reply_all =  Reply.objects.filter(to_blogId=blog_id)
         for c in comment:
+            comment_table = {}
+            comment_table["content"] = c.content
+            comment_table["comment_id"] = c. comment_id
+            comment_table["to_blogId"] = c. to_blogId
+            comment_table["time"] = c. time
             comment_id = c.comment_id
             reply = reply_all.filter(to_commentId=comment_id)
             
