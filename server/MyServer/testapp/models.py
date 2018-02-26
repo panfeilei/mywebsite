@@ -20,7 +20,7 @@ class Blog(models.Model):
 class Comment(models.Model):
     #comment_id = models.CharField(primary_key=True,unique=True,max_length=100)
     comment_id = models.AutoField(primary_key=True)
-    to_blogId = models.IntegerField()
+    to_blogId = models.CharField(max_length=50)
     time = models.DateTimeField(auto_now=True)
     content = models.TextField()
     userid = models.IntegerField()
@@ -32,6 +32,7 @@ class Reply(models.Model):
     #reply_id = models.CharField(primary_key=True,unique=True,max_length=100)
     reply_id = models.AutoField(primary_key=True)
     to_commentId = models.IntegerField()
+    to_blogId = models.CharField(max_length=50)
     to_username = models.CharField(max_length=20)
     content = models.TextField()
     time = models.DateTimeField(auto_now=True)

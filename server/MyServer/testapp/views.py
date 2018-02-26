@@ -7,7 +7,7 @@ from DjangoUeditor.models import UEditorField
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from testapp.models import  Blog as test_blog
-from testapp.models import  Comment
+from testapp.models import  Comment, Reply
 from testapp.models import testmedel
 from django.utils.http import urlquote
 from django.template.loader import render_to_string
@@ -88,6 +88,17 @@ def uploadData(request):
         return HttpResponse('ok')
 
 def getdata(request):
+    action = request.GET.get('action')
+    if action == "getComment":
+        blog_id = request.GET.get('blogid')
+        comment_table = {}
+        comment = Comment.objects.filter(to_blogId=to_blogId)
+        reply_all =  Reply.objects.filter(to_blogId=to_blogId)
+        for c in comment:
+            comment_id = c.comment_id
+            reply = reply_all.filter(to_commentId=comment_id)
+            
+        
     return HttpResponse('None')
     
 @login_required
