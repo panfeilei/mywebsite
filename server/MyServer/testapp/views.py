@@ -7,12 +7,16 @@ from DjangoUeditor.models import UEditorField
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from testapp.models import  Blog as test_blog
-from testapp.models import  Comment, Reply
+from testapp.models import  Comment, Reply, MyUser
 from testapp.models import testmedel
 from django.utils.http import urlquote
+
+from django.forms.models import model_to_dict
 from django.template.loader import render_to_string
 import json
+from django.core.serializers.json import DjangoJSONEncoder
 import time
+
 import operator
 # Create your views here.
 
@@ -82,7 +86,7 @@ def uploadData(request):
         to_blogId = request.POST.get('to_blogId')
         #username = request.user.username
         #headlink = request.user.headlink
-        userid = request.user.id
+        userid = request.user.userid
         print('userid is %d' %userid)
         c = Comment(content=content, to_blogId=to_blogId, userid=userid)
         c.save()
@@ -96,15 +100,17 @@ def getdata(request):
         comment = Comment.objects.filter(to_blogId=blog_id).order_by('time')
         reply_all =  Reply.objects.filter(to_blogId=blog_id)
         for c in comment:
-            comment_table = {}
-            comment_table["content"] = c.content
-            comment_table["comment_id"] = c. comment_id
-            comment_table["to_blogId"] = c. to_blogId
-            comment_table["time"] = c. time
-            comment_id = c.comment_id
-            reply = reply_all.filter(to_commentId=comment_id)
-            
-        
+            comentjson = c.toJSON()
+            user = MyUser.objects.get(userid=c.userid)
+            comentjson['username'] = user.username
+            comentjson['headlink'] = user.headlink
+            reply_list = []
+            reply = reply_all.filter(to_commentId=c.comment_id)
+            for r in reply:
+                 reply_list.append(r.toJSON())
+            comentjson['replay_list'] = reply_list
+            comment_list.append(comentjson)
+        return HttpResponse(json.dumps(comment_list, cls=DjangoJSONEncoder))
     return HttpResponse('None')
     
 @login_required

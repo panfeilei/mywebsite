@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractBaseUser,BaseUserManager,AbstractUser
 from django import forms
 from django.utils.http import urlquote
+from django.core.serializers.json import DjangoJSONEncoder
 # Create your models here.
 class MyUser(AbstractUser):
     #username = models.CharField(max_length=50, unique=True, default="")
@@ -24,7 +25,9 @@ class Comment(models.Model):
     time = models.DateTimeField(auto_now=True)
     content = models.TextField()
     userid = models.IntegerField()
-    
+    def toJSON(self):
+        import json
+        return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
     # username = models.CharField(max_length=20)
     # headlink = models.CharField(max_length=100)
     
@@ -37,7 +40,9 @@ class Reply(models.Model):
     content = models.TextField()
     time = models.DateTimeField(auto_now=True)
     userid = models.IntegerField()
-    
+    def toJSON(self):
+        import json
+        return json.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]), cls=DjangoJSONEncoder)
     # username = models.CharField(max_length=20)
     # headlink = models.CharField(max_length=50)
 
