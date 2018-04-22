@@ -1,27 +1,7 @@
 {% extends 'base.html'%}
 {% block Jscontent%}
-<script>
-    function getUrlParam(name){
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-        var r = window.location.search.substr(1).match(reg); //匹配目标参数
-        if (r != null) return unescape(r[2]); return null; //返回参数值 
-    }
-    
-    $(function(){
-        blog_id = getUrlParam('id')
-        $.get("/getdata/?blogid=" +blog_id+ "&action=getComment",function(data, status){
-            
-        })
-    })
-    
-    function uploadComment(){
-        var comment = {}
-        <!-- alert(getUrlParam('id')) -->
-        comment['content'] = $("#comment_text").val()
-        comment['to_blogId'] = getUrlParam('id')
-        $.post("/uploadData/?action=uploadComment",comment);
-    }
-</script>
+{% load staticfiles %}
+<script src="{% static "js/Blog.js" %}"></script>
 {% endblock %}
 {% block Htmlcontent%}
 <div class="container-fluid" style="padding-left: 0px;">
@@ -41,18 +21,18 @@
         </div>
         <div class="panel-body">
             <div style="border-bottom:2px #269abc solid;height:100px; margin-bottom:20px;">
-                <form method="post" action="##" onsubmit="return false">
+                <form method="post" class="comment-form" action="/uploadData/?action=uploadComment">
                     {% csrf_token %}
-                    <textarea id="comment_text" style="resize: none;width:100%;" required></textarea>
-                    <button class="btn btn-info" type="submit" style="float:right" onclick="uploadComment()">ok</button>
+                    <textarea id="comment_text" style="resize: none;width:100%;" name="content" required></textarea>
+                    <button class="btn btn-info" type="submit" style="float:right" >ok</button>
                 </form>
             </div>
             <div id="comment-content">
-                <ul class="media-list">
-                    <li class="media">
+                <ul class="comment-list">
+                    <li class="media" hidden>
                         <div class="media-left">
                             <a>
-                                <img src="\media\head.jpg" class="img-circle" style="width:50px"/>
+                                <img src="/media/head.jpg" class="img-circle" style="width:50px"/>
                             </a>
                         </div>
                         <div class="media-body">
@@ -60,14 +40,14 @@
                             <p>comment-content</p>
                             <div id="comment-foot">
                                 <span>2018.01.22</span>
-                                <a>reply</a>
+                                <a class="reply_a">reply</a>
                             </div>
                             <div>
-                                <ul id="comment-in" style="list-style:none;" class="media-list">
+                                <ul id="replay-list" style="list-style:none;" class="media-list">
                                     <li class="media">
                                         <div class="media-left">
                                             <a>
-                                                <img src="\media\head.jpg" class="img-circle" style="width:30px"/>
+                                                <img src="/media/head.jpg" class="img-circle" style="width:30px"/>
                                             </a>
                                         </div>
                                         <div class="media-body">

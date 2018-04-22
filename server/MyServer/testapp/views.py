@@ -80,7 +80,7 @@ def uploadData(request):
         link = "http://127.0.0.1:8000/blog?title=%s&id=%s" %  (urlquote(title), blog_id)
         b = test_blog(title=title, content=content, link=link, descript=descript, blog_id = blog_id)
         b.save()
-        return HttpResponse('ok')
+        
     elif action == "uploadComment":
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
@@ -90,7 +90,15 @@ def uploadData(request):
         print('userid is %d' %userid)
         c = Comment(content=content, to_blogId=to_blogId, userid=userid)
         c.save()
-        return HttpResponse('ok')
+    elif action == "uploadReply":
+        content = request.POST.get('content')
+        to_blogId = request.POST.get('toblogId')
+        to_commentId = request.POST.get('toCommentId')
+        to_username = request.POST.get('toUsername')
+        userid = request.user.userid
+        r = Reply(content=content, to_blogId=to_blogId, to_commentId=to_commentId, userid=userid, to_username=to_username)
+        r.save()
+    return HttpResponse('ok')
 
 def getdata(request):
     action = request.GET.get('action')
@@ -98,17 +106,22 @@ def getdata(request):
         blog_id = request.GET.get('blogid')
         comment_list = []
         comment = Comment.objects.filter(to_blogId=blog_id).order_by('time')
-        reply_all =  Reply.objects.filter(to_blogId=blog_id)
+        reply_all = Reply.objects.filter(to_blogId=blog_id)
         for c in comment:
             comentjson = c.toJSON()
             user = MyUser.objects.get(userid=c.userid)
+            print(c.time.strftime('%a, %b %d %H:%M'))
             comentjson['username'] = user.username
             comentjson['headlink'] = user.headlink
             reply_list = []
             reply = reply_all.filter(to_commentId=c.comment_id)
             for r in reply:
-                 reply_list.append(r.toJSON())
-            comentjson['replay_list'] = reply_list
+                reply_item = r.toJSON()
+                user_item = MyUser.objects.get(userid=c.userid)
+                reply_item['username'] = user_item.username
+                reply_item['headlink'] = user_item.headlink
+                reply_list.append(reply_item)
+            comentjson['reply_list'] = reply_list
             comment_list.append(comentjson)
         return HttpResponse(json.dumps(comment_list, cls=DjangoJSONEncoder))
     return HttpResponse('None')

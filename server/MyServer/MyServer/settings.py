@@ -86,11 +86,31 @@ WSGI_APPLICATION = 'MyServer.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+    
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "myweb_data",
+        'USER': 'root',
+        'PASSWORD': 'okok123456',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
+
+'''
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "myweb_data",
+        'USER': 'root',
+        'PASSWORD': 'okok123456',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    }
+'''
 
 
 # Password validation
