@@ -16,7 +16,15 @@
                  var content = editor.getContent();
                 <!-- console.log(tmp);  -->
                 var title = $("#blogTitle").val();
-                $.post("/uploadData/?action=uploadBlog", {'title':title,"descript":descript,"content":content});
+                $.post("/uploadData/?action=uploadBlog", 
+                    {'title':title,"descript":descript,"content":content},
+                        function(result){
+                            console.log(result);
+                            if(result == 'no login'){
+                                window.location.href = {%url 'login'%};
+                            }
+                            
+                        });
             });
         
         });

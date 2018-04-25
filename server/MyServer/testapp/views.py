@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext,Template,loader
 from DjangoUeditor.models import UEditorField
@@ -10,6 +10,7 @@ from testapp.models import  Blog as test_blog
 from testapp.models import  Comment, Reply, MyUser
 from testapp.models import testmedel
 from django.utils.http import urlquote
+from apps.users.models import UserInfo
 
 from django.forms.models import model_to_dict
 from django.template.loader import render_to_string
@@ -33,7 +34,7 @@ def mylogin(request):
         return render(request, 'login.html',context={'loginStatus':'True'})
     else:
         return render(request, 'login.html', context={'loginStatus':'False'})
-
+    
 def testpost(request):
     #print("get user"+request.GET.get('user', ''))
     t = testmedel()
@@ -43,12 +44,13 @@ def testpost(request):
 def editor(request):
     return render(request, 'editor.html')
 
-def blog_view(request):
-    title = request.GET.get("title")
-    blog_id = request.GET.get("id")
-    print(title)
-    Blog = test_blog.objects.get(title=title, blog_id=blog_id)
+def blog_view(request,id):
+
+    Blog = test_blog.objects.get(blog_id=id)
     return render(request, 'blog.html', {'Blog':Blog})
+    
+def testView(request):
+    return render(request, 'test.html') 
     
 @csrf_exempt
 def test(request):
@@ -71,14 +73,19 @@ def test(request):
 @csrf_exempt
 def uploadData(request):
     action = request.GET.get('action')
+    user = request.user
+    if not user.is_authenticated():
+        print('no login')
+        return HttpResponse('no login')
     if action == "uploadBlog":
         now = time.time()
         title = request.POST.get('title')
         content = request.POST.get('content')
         descript = request.POST.get('descript')
-        blog_id = str(hash(str(now) + title))
+        autor = UserInfo.objects.get(userId=user.userId)
+        blog_id = str(hash(str(now) + title)).replace('-', '')
         link = "http://127.0.0.1:8000/blog?title=%s&id=%s" %  (urlquote(title), blog_id)
-        b = test_blog(title=title, content=content, link=link, descript=descript, blog_id = blog_id)
+        b = test_blog(title=title, content=content, link=link, descript=descript, blog_id=blog_id, author=autor.name)
         b.save()
         
     elif action == "uploadComment":
@@ -100,6 +107,15 @@ def uploadData(request):
         r.save()
     return HttpResponse('ok')
 
+def mylogout(request):
+    user = request.user
+    if user:
+        print('user logout')
+        logout(request)
+        return redirect('login')
+    else:
+        return HttpResponse('not user')
+    
 def getdata(request):
     action = request.GET.get('action')
     if action == "getComment":
@@ -128,6 +144,7 @@ def getdata(request):
     
 @login_required
 def index(request):
+    request.current_app = request.resolver_match.namespace
     t = loader.get_template('index.html')
     blog_list = test_blog.objects.all()
     context = {}

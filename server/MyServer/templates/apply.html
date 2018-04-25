@@ -1,0 +1,16 @@
+
+{% extends 'base.html'%}
+{% block Htmlcontent%}
+        {% if applyStatus == 'True' %}
+            <p>apply Success</p>
+        {%else%}
+            {%csrf_token %}
+            <form action="{%url 'userapp:apply'%}" method="get">
+                Email:<input type="text"  name="email" ></input><br>
+                Username:<input type="text"  name="user" ></input><br>
+                Password:<input type="text" name="pwd" ></input><br>
+                repeat:<input type="text" name="repwd" ></input><br>
+                <input type="submit" value="apply"></input>
+            </form>
+        {% endif %}
+{%endblock%}

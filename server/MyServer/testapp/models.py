@@ -6,14 +6,15 @@ from django.core.serializers.json import DjangoJSONEncoder
 # Create your models here.
 class MyUser(AbstractUser):
     #username = models.CharField(max_length=50, unique=True, default="")
-    userid = models.IntegerField(unique=True, default=0)
+    userId = models.IntegerField(unique=True, default=0)
+    
     #userid = models.AutoField(primary_key=True)
     headlink = models.CharField(max_length=50, default="/")
-    #USERNAME_FIELD = 'username'
 
 class Blog(models.Model):
     blog_id = models.CharField(primary_key=True,unique=True,max_length=100)
     title = models.CharField(max_length=50)
+    author = models.CharField(max_length=50)
     link = models.URLField()
     descript =  models.CharField(max_length=100,null=True)
     content = models.TextField()

@@ -34,7 +34,7 @@
                                         </a>
                                     </div>
                                     <div class="NewListItem" style="vertical-align:top;display:inline-block">
-                                        <a class="NewListItemTitle" href={{newblog.link}}>{{newblog.title}}</a>
+                                        <a class="NewListItemTitle" href={% url 'blogUrl' newblog.blog_id %}>{{newblog.title}}</a>
                                         <p class="NewListItemDescript">{{newblog.descript}}</p>
                                     </div>
                                 </li>

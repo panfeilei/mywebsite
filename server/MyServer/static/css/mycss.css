@@ -31,6 +31,55 @@
     text-decoration:none;
 }
 
+.user-icon
+{
+    width: 100px;
+    height: 100px;
+    margin-right: 22px;
+}
+
+.user-title
+{
+    font-size:24px;
+}
+
+.score-item
+{
+    display: inline-block;
+    margin-left: 30px;
+    text-align: center;
+}
+
+.score-num
+{
+    font-size:36px;
+    
+}
+
+.user-signature
+{
+    padding: 5px;
+}
+
+.user-blogInfo
+{
+    min-width:200px;
+}
+
+.user-personalInfo
+{
+    flex:1;
+    padding-top:20px
+}
+
+.content-wrapper
+{
+    display:flex;
+    width:1000px;
+    margin: auto;
+    align-items:center;
+}
+
 #mainlist a+ul
 {
     display:none;

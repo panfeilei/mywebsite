@@ -24,7 +24,10 @@
                 <input type="text" id="nav-serach"></input>
                 <button type="submit" class="btn  btn-primary">Search</button>
             {% if user.is_authenticated  %}
-                <p class="navbar-right" style="color:white;">{{ user.username }}</p>
+                <div class="navbar-right">
+                    <a style="color:white; margin:5px" href={% url 'userapp:PersonalZoneUrl' user.userId %}>{{ user.username }}</a>
+                    <a style="color:white;" href={% url 'logout' %}>exit</a>
+                </div> 
             {% else %}
                 <a class="btn  btn-link" href="/login">login</a>
                 <a class="btn  btn-link">register</a>

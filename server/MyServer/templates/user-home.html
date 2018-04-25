@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+{% block Htmlcontent%}
+        <div class="container-fluid" style="padding-left: 0px;">
+            <div class="row">
+                <div class="content-wrapper">
+                    <a>
+                        <img class="img-circle user-icon"  src={{userinfo.iconUrl}}></img>
+                    </a>
+                    <div class="user-personalInfo">
+                        <div>
+                            <span class="user-title">{{userinfo.name}}</span>
+                        </div>
+                        <div class="user-signature">This guy is lazy and nothing is left</div>
+                        <br>
+                        <div class="user-signature">aweerf</div>
+                    </div>
+                    <div class="user-blogInfo">
+                        <div class="score-item">
+                        发表文章
+                            <p class="score-num">2</p>
+                        </div>
+                        <div class="score-item">
+                        发表评论
+                            <p class="score-num">2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+{% endblock %}
