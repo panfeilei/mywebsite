@@ -7,7 +7,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 class MyUser(AbstractUser):
     #username = models.CharField(max_length=50, unique=True, default="")
     userId = models.IntegerField(unique=True, default=0)
-    
     #userid = models.AutoField(primary_key=True)
     headlink = models.CharField(max_length=50, default="/")
 
@@ -18,6 +17,7 @@ class Blog(models.Model):
     link = models.URLField()
     descript =  models.CharField(max_length=100,null=True)
     content = models.TextField()
+    time = models.DateTimeField(auto_now=True)
     
 class Comment(models.Model):
     #comment_id = models.CharField(primary_key=True,unique=True,max_length=100)
@@ -47,8 +47,6 @@ class Reply(models.Model):
     # username = models.CharField(max_length=20)
     # headlink = models.CharField(max_length=50)
 
-
-
-class testmedel(forms.Form):
+class testmedel(models.Model):
     title = forms.CharField(max_length=50)
     file = forms.FileField()

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from testapp.models import MyUser
-from apps.users.models import UserInfo
+from testapp.models import MyUser,Blog
+from apps.users.models import UserInfo, UnreadMessage, Message
 import random
 def home(request, userId):
     print(userId)
@@ -10,8 +10,16 @@ def home(request, userId):
         print('user is none')
         return HttpResponse("user is none")
     else:
+        blogList = Blog.objects.filter(author=userId)
         print('user icon' + u[0].iconUrl)
-        return render(request, 'user-home.html', {'userinfo':u[0]})
+        return render(request, 'user-home.html', {'userinfo':u[0], 'bloglist':blogList})
+
+def addMessage(name, userId, content, toUserId, type):
+    m = UnreadMessage(name=name, userId=userId, content=content, toUserId=toUserId, type=type)
+    m.save()
+
+def handleMessage(msg):
+    pass
 
 def apply(request):
     if len(request.GET) == 0:

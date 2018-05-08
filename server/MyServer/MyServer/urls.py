@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^constrol/', editor_view.get_ueditor_controller),
     url(r'^test/',test_view.test),
     url(r'^blog/(\w+)/', test_view.blog_view, name="blogUrl"),
-    url(r'^users/', include('apps.users.urls', namespace='users', app_name='userapp')),
+    url(r'^upload-icon/', test_view.uploadIcon, name='uploadIconUrl'),
+    url(r'^users/', include('apps.users.urls', namespace='userapp')),
     #url(r'^media/(?P<path>.*)/$', serve, {"document_root": settings.MEDIA_ROOT}),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

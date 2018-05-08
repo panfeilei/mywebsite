@@ -3,9 +3,37 @@
         <div class="container-fluid" style="padding-left: 0px;">
             <div class="row">
                 <div class="content-wrapper">
-                    <a>
-                        <img class="img-circle user-icon"  src={{userinfo.iconUrl}}></img>
-                    </a>
+                    <div class="icon-space">
+                        <a class="user-icon" href='#'>
+                            <img class="img-circle main-icon"  src={{userinfo.iconUrl}}></img>
+                        </a>
+                        <div class="upload-logo" data-toggle="modal" data-target="#myModal">
+                            <div class="text-muted ">upload Img</div>
+                         </div>
+                         <div class="modal fade" id="myModal" >
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="modal-body">
+                                            <img class="icon-preview"></img>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div>
+                                                <div class="btn btn-primary btn-lg file-input">
+                                                openFile
+                                                <input type="file"></input>
+                                                </div>
+                                                <button  class="btn btn-primary  btn-lg upload-icon">
+                                                    Upload
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="user-personalInfo">
                         <div>
                             <span class="user-title">{{userinfo.name}}</span>
@@ -17,7 +45,7 @@
                     <div class="user-blogInfo">
                         <div class="score-item">
                         发表文章
-                            <p class="score-num">2</p>
+                            <p class="score-num">{{bloglist|length}}</p>
                         </div>
                         <div class="score-item">
                         发表评论
@@ -26,5 +54,70 @@
                     </div>
                 </div>
             </div>
-        </div>    
+            <div class="row">
+                <div class="content-wrapper">
+                    <div>
+                        <ul class="nav nav-tabs">
+                          <li  class="active"><a data-toggle="tab" href="#public-blog">Home</a></li>
+                          <li ><a data-toggle="tab" href="#comment">Profile</a></li>
+                          <li ><a data-toggle="tab" href="#comment2">Messages</a></li>
+                        </ul>
+                        
+                        <div class="tab-content">
+                            <div class="tab-pane in active" id="public-blog">
+                            {% for blog in bloglist%}
+                                <div class="tweet-item layout-flex">
+                                    <a class="user-icon" href="#">
+                                        <img class="img-circle" src={{userinfo.iconUrl}}></img>
+                                    </a>
+                                    <div class="flex-grow">
+                                        <div>
+                                            <a class="nickname" href={{blog.link}}>{{blog.title}}</a>
+                                            <span class="text-muted">{{blog.time}}</span>
+                                            <div>{{blog.descript}}</div>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                            <div class="tab-pane" id="comment">all comment</div>
+                            <div class="tab-pane" id="comment2">all comment2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $(function(){
+            $('.file-input input').change(function(){
+                var file = this.files[0];
+                var reader = new FileReader();
+                var imgFile;
+                reader.onload=function(e){
+                    console.log('hello');
+                    imgFile = e.target.result;
+                    $('.icon-preview').attr('src', imgFile);
+                };
+                reader.readAsDataURL(file);
+            
+            })
+            
+            $('.upload-icon').click(function(){
+                var img = $('.file-input input')[0];
+                var formdata = new FormData();
+                formdata.append('icon-image', img.files[0]);
+                $.ajax({
+                    url:'/upload-icon/',
+                    type:'POST',
+                    data:formdata,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success:function(result){console.log(result);}
+                });
+                
+            });
+        });
+        </script>
 {% endblock %}

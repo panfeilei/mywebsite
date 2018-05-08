@@ -10,6 +10,24 @@
     z-index:3;
 }
 
+.layout-flex {
+    display: flex;
+    align-items: flex-start;
+}
+
+.mynavbar-right
+{
+	float:right;
+	display: flex;
+    align-items: center;
+}
+
+.tweet-item {
+    padding: 20px 0 10px;
+    border-bottom: 1px solid #eee;
+    word-break: break-all;
+}
+
 .reply_a{
     cursor:pointer;
 }
@@ -33,11 +51,114 @@
 
 .user-icon
 {
-    width: 100px;
-    height: 100px;
-    margin-right: 22px;
+
 }
 
+.message-icon
+{
+	position:relative;
+	display:inline-block;
+}
+
+.message-icon:hover  .message-list
+{
+	display:inline-block;
+	max-height:160px; 
+}
+
+.message-list li
+{
+	padding:5px;
+}
+
+.message-list
+{
+	overflow: hidden;
+ 	min-width:50px; 
+	max-height:0px; 
+	margin:0px;
+	position:absolute;
+	padding:0px;
+	background:white;
+	transition: max-height 1s ease;
+	list-style-type: none;
+}
+
+.main-icon
+{
+    width: 100px;
+    height: 100px;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+.navbar-tag a
+{
+	color:white; 
+	margin:5px;
+}
+
+.message-list a
+{
+	color:black;
+}
+
+.navbar-tag
+{
+	float:right;
+	display:inline-block;
+}
+.text-muted {
+    font-size: 10px;
+    color: #999999;
+    margin-left: 5px;
+}
+
+
+
+.icon-space
+{
+    margin-right: 22px;
+    position: relative;
+	display: inline-block;
+}
+
+.icon-space .upload-logo .text-muted 
+{
+    color: #fff;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.upload-logo {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.icon-space:hover  .upload-logo
+{
+    display: block;
+}
+
+.nickname {
+    font-weight: 600;
+    color: blue;
+}
+
+
+.tweet-item .user-icon img {
+    width: 45px;
+    height: 45px;
+}
 .user-title
 {
     font-size:24px;
@@ -72,6 +193,18 @@
     padding-top:20px
 }
 
+.upload-icon
+{
+
+}
+
+.icon-preview
+{
+    width:300px;
+    height:300px;
+    position:relative;
+}
+
 .content-wrapper
 {
     display:flex;
@@ -90,6 +223,21 @@
     color:white;
     overflow: hidden;
     text-decoration:none;
+}
+
+.file-input
+{
+    position:relative;
+}
+
+.file-input input
+{
+    width:100%;
+    height:100%;
+    position:absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
 }
 
 #mainlist a:hover

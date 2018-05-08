@@ -11,13 +11,14 @@ from testapp.models import  Comment, Reply, MyUser
 from testapp.models import testmedel
 from django.utils.http import urlquote
 from apps.users.models import UserInfo
-
+from apps.users.views import addMessage
 from django.forms.models import model_to_dict
 from django.template.loader import render_to_string
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-import time
+import time,os
 
+MEDIA_PATH = settings.MEDIA_ROOT
 import operator
 # Create your views here.
 
@@ -50,8 +51,21 @@ def blog_view(request,id):
     return render(request, 'blog.html', {'Blog':Blog})
     
 def testView(request):
-    return render(request, 'test.html') 
-    
+    return render(request, 'test.html')
+
+@csrf_exempt
+def uploadIcon(request):
+
+    print(settings.MEDIA_ROOT)
+    icon = request.FILES['icon-image']
+    with open(os.path.join(MEDIA_PATH, request.user.username + "-icon.jpg"), 'wb+') as f:
+      for chunk in icon.chunks():
+          f.write(chunk)
+          user = UserInfo.objects.get(userId=request.user.userId)
+          user.iconUrl = '/media/'+request.user.username + '-icon.jpg'
+          user.save()
+    return HttpResponse('upload ok')
+
 @csrf_exempt
 def test(request):
     if request.method == 'POST':
@@ -59,8 +73,8 @@ def test(request):
         if action == 'uploadimage':
             img = request.FILES.get('upfile')
             print(request.FILES)
-            print(img)
-            print(settings.MEDIA_ROOT)
+            #print(img)
+            #print(settings.MEDIA_ROOT)
             imgt = open(settings.MEDIA_ROOT+"\\"+img.name, "wb+")
             for l in img.chunks():
                 imgt.write(l)
@@ -74,7 +88,7 @@ def test(request):
 def uploadData(request):
     action = request.GET.get('action')
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         print('no login')
         return HttpResponse('no login')
     if action == "uploadBlog":
@@ -84,25 +98,23 @@ def uploadData(request):
         descript = request.POST.get('descript')
         autor = UserInfo.objects.get(userId=user.userId)
         blog_id = str(hash(str(now) + title)).replace('-', '')
-        link = "http://127.0.0.1:8000/blog?title=%s&id=%s" %  (urlquote(title), blog_id)
-        b = test_blog(title=title, content=content, link=link, descript=descript, blog_id=blog_id, author=autor.name)
+        link = "http://127.0.0.1:8000/blog/%s" %  (blog_id)
+        b = test_blog(title=title, content=content, link=link, descript=descript, blog_id=blog_id, author=autor.userId)
         b.save()
-        
     elif action == "uploadComment":
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
-        #username = request.user.username
-        #headlink = request.user.headlink
-        userid = request.user.userid
-        print('userid is %d' %userid)
+        toUserId = test_blog.objects.get(blog_id = to_blogId).author
+        userid = request.user.userId
         c = Comment(content=content, to_blogId=to_blogId, userid=userid)
         c.save()
+        addMessage(request.user.username, userid, content, toUserId, "comment")
     elif action == "uploadReply":
         content = request.POST.get('content')
         to_blogId = request.POST.get('toblogId')
         to_commentId = request.POST.get('toCommentId')
         to_username = request.POST.get('toUsername')
-        userid = request.user.userid
+        userid = request.user.userId
         r = Reply(content=content, to_blogId=to_blogId, to_commentId=to_commentId, userid=userid, to_username=to_username)
         r.save()
     return HttpResponse('ok')
@@ -118,24 +130,26 @@ def mylogout(request):
     
 def getdata(request):
     action = request.GET.get('action')
+    print(action)
     if action == "getComment":
         blog_id = request.GET.get('blogid')
+        print(blog_id)
         comment_list = []
         comment = Comment.objects.filter(to_blogId=blog_id).order_by('time')
         reply_all = Reply.objects.filter(to_blogId=blog_id)
         for c in comment:
             comentjson = c.toJSON()
-            user = MyUser.objects.get(userid=c.userid)
+            user = UserInfo.objects.get(userId=c.userid)
             print(c.time.strftime('%a, %b %d %H:%M'))
-            comentjson['username'] = user.username
-            comentjson['headlink'] = user.headlink
+            comentjson['username'] = user.name
+            comentjson['headlink'] = user.iconUrl
             reply_list = []
             reply = reply_all.filter(to_commentId=c.comment_id)
             for r in reply:
                 reply_item = r.toJSON()
-                user_item = MyUser.objects.get(userid=c.userid)
-                reply_item['username'] = user_item.username
-                reply_item['headlink'] = user_item.headlink
+                user_item = UserInfo.objects.get(userId=c.userid)
+                reply_item['username'] = user_item.name
+                reply_item['headlink'] = user_item.iconUrl
                 reply_list.append(reply_item)
             comentjson['reply_list'] = reply_list
             comment_list.append(comentjson)
