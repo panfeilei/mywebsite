@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from testapp.models import MyUser,Blog
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 from apps.users.models import UserInfo, UnreadMessage, Message
 import random
 def home(request, userId):
@@ -20,6 +22,17 @@ def addMessage(name, userId, content, toUserId, type):
 
 def handleMessage(msg):
     pass
+
+def getMessage(request):
+    userId = request.user.userId
+    response = {}
+    print(userId)
+    allMessage = UnreadMessage.objects.filter(toUserId=userId)
+    response["all"] = len(allMessage)
+    response["comment"] = str(len(allMessage.filter(type="comment")))
+    response["letter"] = str(len(allMessage.filter(type="letter")))
+    #return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder))
+    return JsonResponse(response)
 
 def apply(request):
     if len(request.GET) == 0:

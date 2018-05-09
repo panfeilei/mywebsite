@@ -27,10 +27,10 @@
 				{% if user.is_authenticated  %}
 				<div class="navbar-tag">
 					<span class="message-icon">
-						<a>消息</a>
+						<a class="message-all">消息</a>
 						<ul class="message-list">
-							<li><a>评论</a></li>
-							<li><a>私信</a></li>
+							<li><a class="message-comment">评论</a></li>
+							<li><a class="message-letter">私信</a></li>
 						</ul>
 					</span>
 					<a href={% url 'userapp:PersonalZoneUrl' user.userId %}>{{ user.username }}</a>

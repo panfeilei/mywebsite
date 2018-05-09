@@ -54,10 +54,20 @@
 
 }
 
+.content-head
+{
+	
+}
+
 .message-icon
 {
 	position:relative;
 	display:inline-block;
+}
+
+.content-head
+{
+	border-bottom: solid 1px #ddd;
 }
 
 .message-icon:hover  .message-list
@@ -74,7 +84,7 @@
 .message-list
 {
 	overflow: hidden;
- 	min-width:50px; 
+ 	min-width:70px; 
 	max-height:0px; 
 	margin:0px;
 	position:absolute;
@@ -210,6 +220,7 @@
     display:flex;
     width:1000px;
     margin: auto;
+	padding-bottom:10px;
     align-items:center;
 }
 

@@ -10,10 +10,43 @@
         <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="http://malsup.github.com/jquery.form.js"></script>
         <link rel="stylesheet" href="{% static "css/mycss.css" %}"></link>
-        {% block Jscontent %}{% endblock %}
+        {% block Headcontent %}{% endblock %}
     </head>
     <body style="padding-top: 50px;background-color:#F2F2F2">
         {%include 'head.html'%}
         {% block Htmlcontent %}{% endblock %}
     </body>
+	
+	<script type="text/javascript">
+		$(function(){
+			{% block Jscontent %}{% endblock %}
+			$.get('/users/getMessage', function(data, status){
+				var all = parseInt(data['all']);
+				var letter = parseInt(data['letter']);
+				var comment = parseInt(data['comment']);
+				if(all >0){
+					var messageAllItem = $('.message-all');
+					appendText(messageAllItem, '(' + all + ')');
+				}
+				if(letter > 0){
+					var letter_item = $('.message-letter');
+					appendText(letter_item, '(' + letter + ')');
+				}
+				
+				if(comment > 0){
+					var comment_item = $('.message-comment');
+					appendText(comment_item, '(' + comment + ')');
+				}
+					
+			})
+		});
+		
+		function appendText(item, text){
+			oldText = item.text();
+			item.text(oldText + text);
+		}
+	
+	
+	</script>
+	
 </html>

@@ -1,5 +1,14 @@
 {% extends 'base.html'%}
 {% block Htmlcontent%}
+		<div class="row">
+                <div class="content-wrapper">
+					<ul class="nav nav-tabs">
+                          <li  class="active"><a data-toggle="tab" href="#public-blog">Home</a></li>
+                          <li ><a href="https://www.baidu.com/">Message</a></li>
+
+                    </ul>
+				</div>
+		</div>
         <div class="container-fluid" style="padding-left: 0px;">
             <div class="row">
                 <div class="content-wrapper">
@@ -56,40 +65,32 @@
             </div>
             <div class="row">
                 <div class="content-wrapper">
-                    <div>
-                        <ul class="nav nav-tabs">
-                          <li  class="active"><a data-toggle="tab" href="#public-blog">Home</a></li>
-                          <li ><a data-toggle="tab" href="#comment">Profile</a></li>
-                          <li ><a data-toggle="tab" href="#comment2">Messages</a></li>
-                        </ul>
-                        
-                        <div class="tab-content">
-                            <div class="tab-pane in active" id="public-blog">
-                            {% for blog in bloglist%}
-                                <div class="tweet-item layout-flex">
-                                    <a class="user-icon" href="#">
-                                        <img class="img-circle" src={{userinfo.iconUrl}}></img>
-                                    </a>
-                                    <div class="flex-grow">
-                                        <div>
-                                            <a class="nickname" href={{blog.link}}>{{blog.title}}</a>
-                                            <span class="text-muted">{{blog.time}}</span>
-                                            <div>{{blog.descript}}</div>
-                                        </div>
-                                    
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            </div>
-                            <div class="tab-pane" id="comment">all comment</div>
-                            <div class="tab-pane" id="comment2">all comment2</div>
-                        </div>
+					<div>
+						<div class="content-head">
+							<span>All Blog</span>
+						</div>
+						{% for blog in bloglist%}
+						<div class="tweet-item layout-flex">
+							<a class="user-icon" href="#">
+								<img class="img-circle" src={{userinfo.iconUrl}}></img>
+							</a>
+							<div class="flex-grow">
+								<div>
+									<a class="nickname" href={{blog.link}}>{{blog.title}}</a>
+									<span class="text-muted">{{blog.time}}</span>
+									<div>{{blog.descript}}</div>
+								</div>
+							
+							</div>
+						</div>
+						{% endfor %}
                     </div>
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-        $(function(){
+		{% endblock %}
+
+		{% block Jscontent%}
             $('.file-input input').change(function(){
                 var file = this.files[0];
                 var reader = new FileReader();
@@ -116,8 +117,5 @@
                     contentType: false,
                     success:function(result){console.log(result);}
                 });
-                
             });
-        });
-        </script>
 {% endblock %}

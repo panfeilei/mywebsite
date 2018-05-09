@@ -92,7 +92,7 @@
                 comment_obj.find('.comment-id').text(comment_item.comment_id);
                 comment_obj.find('.comment-content').text(comment_item.content);
                 comment_obj.find('.comment-icon').attr('src',comment_item.headlink);
-                console.log(comment_item.headlink);
+                // console.log(comment_item.headlink);
                 var reply_obj = null;
                 for(var reply_item of comment_item.reply_list)
                 {
