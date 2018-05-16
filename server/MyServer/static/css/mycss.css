@@ -70,18 +70,18 @@
 	border-bottom: solid 1px #ddd;
 }
 
-.message-icon:hover  .message-list
+.message-icon:hover  .messageNav-list
 {
 	display:inline-block;
 	max-height:160px; 
 }
 
-.message-list li
+.messageNav-list li
 {
 	padding:5px;
 }
 
-.message-list
+.messageNav-list
 {
 	overflow: hidden;
  	min-width:70px; 
@@ -109,7 +109,7 @@
 	margin:5px;
 }
 
-.message-list a
+.messageNav-list a
 {
 	color:black;
 }
@@ -125,8 +125,6 @@
     margin-left: 5px;
 }
 
-
-
 .icon-space
 {
     margin-right: 22px;
@@ -139,6 +137,24 @@
     color: #fff;
     text-align: center;
     margin-top: 40px;
+}
+
+.message-list li
+{
+	list-style:none;
+	padding:10px;
+	border-bottom:1px solid #dddddd
+}
+
+.unread-item
+{
+	font-weight:bold;
+}
+
+.message-list-time
+{
+	float:right;
+	padding-right:20px;
 }
 
 .upload-logo {
@@ -215,14 +231,56 @@
     position:relative;
 }
 
+.mainindex_l
+{
+	width:800px;
+}
 .content-wrapper
 {
     display:flex;
     width:1000px;
     margin: auto;
-	padding-bottom:10px;
     align-items:center;
 }
+
+.content-wrapper .head-ul
+{
+	padding-left:0px;
+	margin:0px;
+}
+
+
+.mynav
+{
+    background: #fff;
+	margin-bottom:20px;
+    border-bottom: 1px solid #d7d8da;
+}
+
+.mynav li
+{
+	float: left;
+    margin-right: 34px;
+    list-style: none;
+    line-height: 47px;
+    height: 49px;
+}
+
+.nav-curr
+{
+	font-size:18px;
+	color: #333;
+	font-weight: bold;
+	border-bottom: 2px solid #101010;
+}
+
+.mynav li a
+{
+	font-size:15px;
+	color: #333;
+	text-decoration:none;
+}
+
 
 #mainlist a+ul
 {

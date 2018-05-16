@@ -29,9 +29,10 @@ class Comment(models.Model):
     def toJSON(self):
         import json
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
-    # username = models.CharField(max_length=20)
-    # headlink = models.CharField(max_length=100)
-    
+
+def getFileDict(filed):
+    return dict([(attr, getattr(filed, attr)) for attr in [f.name for f in filed._meta.fields]])
+
 class Reply(models.Model):
     #reply_id = models.CharField(primary_key=True,unique=True,max_length=100)
     reply_id = models.AutoField(primary_key=True)
@@ -44,8 +45,6 @@ class Reply(models.Model):
     def toJSON(self):
         import json
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
-    # username = models.CharField(max_length=20)
-    # headlink = models.CharField(max_length=50)
 
 class testmedel(models.Model):
     title = forms.CharField(max_length=50)

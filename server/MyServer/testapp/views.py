@@ -104,11 +104,12 @@ def uploadData(request):
     elif action == "uploadComment":
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
-        toUserId = test_blog.objects.get(blog_id = to_blogId).author
+        b = test_blog.objects.get(blog_id = to_blogId)
         userid = request.user.userId
         c = Comment(content=content, to_blogId=to_blogId, userid=userid)
         c.save()
-        addMessage(request.user.username, userid, content, toUserId, "comment")
+        addMessage(request.user.username, userid, content,
+                   b.author, "comment", b.title, b.link)
     elif action == "uploadReply":
         content = request.POST.get('content')
         to_blogId = request.POST.get('toblogId')

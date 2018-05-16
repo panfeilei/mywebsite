@@ -1,0 +1,89 @@
+{% extends 'base.html'%}
+{% block Htmlcontent%}
+		<div class="row">
+			<div class="mynav">
+                <div class="content-wrapper ">
+					<ul class="head-ul">
+                          <li  id="user-main"><a href="{%url 'userapp:PersonalZoneUrl'%}">个人主页</a></li>
+                          <li id="user-message" class="nav-curr"><a href="{%url 'userapp:getmessageinfo' %}">消息</a></li>
+                    </ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="content-wrapper ">
+			<div class="mainindex_l">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<ul class="nav nav-tabs">
+							<li class="active"><a data-toggle="tab" href="#comment">评论</a></li>
+							<li><a data-toggle="tab" href="#letter">私信</a></li>
+						</ul>
+					</div>
+					
+					<div class="panel-body">
+						<div class="tab-content">
+						<div class="tab-pane in active" id="comment">
+							<ul class="message-list">
+								<li class="message-list-item">
+									<div>
+										<span class="message-list-user"></span>
+										<span class="message-list-type"></span>
+										<span><a class="message-list-link"></a></span>
+										<span class="message-list-time"></span>
+									</div>
+								</li>
+								
+								<li class="message-list-item unread-item">
+									<div>
+										<span class="message-list-user">pan1</span>
+										<span class="message-list-type">回复了帖子</span>
+										<span><a class="message-list-link">ssssss</a></span>
+										<span class="message-list-time">2013-10-20</span>
+									</div>
+								</li>
+							</ul>
+							
+						</div>
+						<div class="tab-pane" id="letter">私信</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+			
+		</div>
+		{% endblock %}
+
+		{% block Jscontent%}
+			$.get('/users/getmessageinfo?type=comment', function(data, state){
+				console.log(data);
+				var msgList = $('.message-list');
+				var msgString = $('.message-list-item').prop('outerHTML');
+				var unReadMsgString = $('.unread-item').prop('outerHTML');
+				$('.message-list-item').hide();
+				for(msg of data['unread'])
+				{
+					
+					var msgItem = $(unReadMsgString);
+					msgItem.find('.message-list-user').text(msg['name']);
+					msgItem.find('.message-list-time').text(msg['time']);
+					if(data['type'] == 'comment')
+						msgItem.find('.message-list-type').text('回复了帖子');
+					msgList.append(msgItem);
+				}
+				for(msg of data['read'])
+				{
+					var msgItem = $(msgString);
+					msgItem.find('.message-list-user').text(msg['name']);
+					msgItem.find('.message-list-time').text(msg['time']);
+					if(msg['type'] == 'comment')
+						msgItem.find('.message-list-type').text('回复了帖子');
+					msgList.append(msgItem);
+				}
+				
+			});
+	   
+	   
+		{% endblock %}

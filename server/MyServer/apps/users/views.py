@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
-from testapp.models import MyUser,Blog
+from testapp.models import MyUser,Blog,Comment
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from apps.users.models import UserInfo, UnreadMessage, Message
+from apps.users.models import UserInfo, UnreadMessage as Unread, Message
 import random
-def home(request, userId):
+from testapp.models import getFileDict
+def home(request):
+    userId = request.user.userId
     print(userId)
     u = UserInfo.objects.filter(userId=userId)
     if len(u) == 0:
@@ -14,10 +16,12 @@ def home(request, userId):
     else:
         blogList = Blog.objects.filter(author=userId)
         print('user icon' + u[0].iconUrl)
-        return render(request, 'user-home.html', {'userinfo':u[0], 'bloglist':blogList})
+        return render(request, 'users/user-home.html', {'userinfo':u[0], 'bloglist':blogList})
 
-def addMessage(name, userId, content, toUserId, type):
-    m = UnreadMessage(name=name, userId=userId, content=content, toUserId=toUserId, type=type)
+def addMessage(name, userId, content, toUserId, type, fromBlog, link):
+    m = Unread(name=name, userId=userId, content=content,
+               toUserId=toUserId, type=type, fromBlog=fromBlog,
+               link=link)
     m.save()
 
 def handleMessage(msg):
@@ -27,12 +31,36 @@ def getMessage(request):
     userId = request.user.userId
     response = {}
     print(userId)
-    allMessage = UnreadMessage.objects.filter(toUserId=userId)
+    allMessage = Unread.objects.filter(toUserId=userId)
     response["all"] = len(allMessage)
     response["comment"] = str(len(allMessage.filter(type="comment")))
     response["letter"] = str(len(allMessage.filter(type="letter")))
-    #return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder))
     return JsonResponse(response)
+
+def getMessageInfo(request):
+    type = request.GET.get('type')
+    userId = request.user.userId
+    message={}
+    if type == 'comment':
+        unr = Unread.objects.filter(toUserId=userId, type=type)
+        read = Message.objects.filter(toUserId=userId, type=type)
+        readList = []
+        unreadList = []
+        for r in read:
+            d = getFileDict(r)
+            readList.append(d)
+        message['read'] = readList
+        for u in unr:
+            d = getFileDict(u)
+            unreadList.append(d)
+            m = Message.objects.createMessage(u)
+            m.save()
+        unr.delete()
+        message['unread'] = unreadList
+        return JsonResponse(message)
+    elif type == 'letter':
+        pass
+    return render(request, 'users/user-msg.html')
 
 def apply(request):
     if len(request.GET) == 0:

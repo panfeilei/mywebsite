@@ -28,12 +28,12 @@
 				<div class="navbar-tag">
 					<span class="message-icon">
 						<a class="message-all">消息</a>
-						<ul class="message-list">
+						<ul class="messageNav-list">
 							<li><a class="message-comment">评论</a></li>
 							<li><a class="message-letter">私信</a></li>
 						</ul>
 					</span>
-					<a href={% url 'userapp:PersonalZoneUrl' user.userId %}>{{ user.username }}</a>
+					<a href={% url 'userapp:PersonalZoneUrl' %}>{{ user.username }}</a>
 					<a href={% url 'logout' %}>exit</a>
 				</div> 
 				{% else %}
