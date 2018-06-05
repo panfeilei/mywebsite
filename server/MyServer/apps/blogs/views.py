@@ -1,25 +1,28 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
+import json
+import os
+import time
+
+from django.conf import settings
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse
+from django.shortcuts import render,redirect
 from django.template import RequestContext,Template,loader
-from DjangoUeditor.models import UEditorField
-from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from testapp.models import  Blog as test_blog
-from testapp.models import  Comment, Reply, MyUser
-from testapp.models import testmedel
-from django.utils.http import urlquote
+from rest_framework import viewsets
+from rest_framework import generics, mixins
+from rest_framework.response import Response
+
+from apps.blogs.models import  Blog
+from apps.blogs.models import  Comment, Reply
+from apps.blogs.models import testmedel
 from apps.users.models import UserInfo
 from apps.users.views import addMessage
-from django.forms.models import model_to_dict
-from django.template.loader import render_to_string
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-import time,os
+from .serializers import BlogSerializer,CommentSerializer, ReplySerializer
 
 MEDIA_PATH = settings.MEDIA_ROOT
-import operator
+
 # Create your views here.
 
 def mylogin(request):
@@ -32,10 +35,10 @@ def mylogin(request):
     user=authenticate(username=username, password=password)
     if user is not None:
         login(request, user)
-        return render(request, 'login.html',context={'loginStatus':'True'})
+        return render(request, 'login.html', context={'loginStatus': 'True'})
     else:
-        return render(request, 'login.html', context={'loginStatus':'False'})
-    
+        return render(request, 'login.html', context={'loginStatus': 'False'})
+
 def testpost(request):
     #print("get user"+request.GET.get('user', ''))
     t = testmedel()
@@ -46,9 +49,8 @@ def editor(request):
     return render(request, 'editor.html')
 
 def blog_view(request,id):
-
-    Blog = test_blog.objects.get(blog_id=id)
-    return render(request, 'blog.html', {'Blog':Blog})
+    blogs = Blog.objects.get(blog_id=id)
+    return render(request, 'blog.html', {'Blog':blogs})
     
 def testView(request):
     return render(request, 'test.html')
@@ -99,12 +101,12 @@ def uploadData(request):
         autor = UserInfo.objects.get(userId=user.userId)
         blog_id = str(hash(str(now) + title)).replace('-', '')
         link = "http://127.0.0.1:8000/blog/%s" %  (blog_id)
-        b = test_blog(title=title, content=content, link=link, descript=descript, blog_id=blog_id, author=autor.userId)
+        b = Blog(title=title, content=content, link=link, descript=descript, blog_id=blog_id, author=autor.userId)
         b.save()
     elif action == "uploadComment":
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
-        b = test_blog.objects.get(blog_id = to_blogId)
+        b = Blog.objects.get(blog_id = to_blogId)
         userid = request.user.userId
         c = Comment(content=content, to_blogId=to_blogId, userid=userid)
         c.save()
@@ -116,7 +118,8 @@ def uploadData(request):
         to_commentId = request.POST.get('toCommentId')
         to_username = request.POST.get('toUsername')
         userid = request.user.userId
-        r = Reply(content=content, to_blogId=to_blogId, to_commentId=to_commentId, userid=userid, to_username=to_username)
+        c = Comment.objects.get(to_blogId=to_blogId)
+        r = Reply(content=content, to_blogId=to_blogId, to_commentId=c, userid=userid, to_username=to_username)
         r.save()
     return HttpResponse('ok')
 
@@ -161,8 +164,27 @@ def getdata(request):
 def index(request):
     request.current_app = request.resolver_match.namespace
     t = loader.get_template('index.html')
-    blog_list = test_blog.objects.all()
+    blog_list = Blog.objects.all()
     context = {}
     if blog_list:
         context = {'blog_list': blog_list}
     return render(request, 'index.html', context)
+
+class BlogViewSet(viewsets.ModelViewSet):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+class CommentViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    #queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        id = self.request.query_params['blogid']
+        print(id)
+        queryset = Comment.objects.filter(to_blogId=id)
+        return queryset
+
+
+class ReplyViewSet(viewsets.ModelViewSet):
+    queryset = Reply.objects.all()
+    serializer_class = ReplySerializer

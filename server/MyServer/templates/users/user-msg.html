@@ -36,10 +36,10 @@
 								
 								<li class="message-list-item unread-item">
 									<div>
-										<span class="message-list-user">pan1</span>
-										<span class="message-list-type">回复了帖子</span>
-										<span><a class="message-list-link">ssssss</a></span>
-										<span class="message-list-time">2013-10-20</span>
+										<span class="message-list-user"></span>
+										<span class="message-list-type"></span>
+										<span><a class="message-list-link"></a></span>
+										<span class="message-list-time"></span>
 									</div>
 								</li>
 							</ul>
@@ -69,7 +69,9 @@
 					var msgItem = $(unReadMsgString);
 					msgItem.find('.message-list-user').text(msg['name']);
 					msgItem.find('.message-list-time').text(msg['time']);
-					if(data['type'] == 'comment')
+					msgItem.find('.message-list-link').text(msg['fromBlog']);
+					msgItem.find('.message-list-link').attr('href', msg['link']);
+					if(msg['type'] == 'comment')
 						msgItem.find('.message-list-type').text('回复了帖子');
 					msgList.append(msgItem);
 				}
@@ -78,6 +80,8 @@
 					var msgItem = $(msgString);
 					msgItem.find('.message-list-user').text(msg['name']);
 					msgItem.find('.message-list-time').text(msg['time']);
+					msgItem.find('.message-list-link').text(msg['fromBlog']);
+					msgItem.find('.message-list-link').attr('href', msg['link']);
 					if(msg['type'] == 'comment')
 						msgItem.find('.message-list-type').text('回复了帖子');
 					msgList.append(msgItem);

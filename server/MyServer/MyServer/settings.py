@@ -15,7 +15,7 @@ import os,sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGIN_URL = "/login/"
-
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -29,12 +29,13 @@ ALLOWED_HOSTS = []
 #STATIC_ROOT = os.path.join(BASE_DIR,'static')
 MEDIA_URL="/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR,'static'),
     os.path.join(BASE_DIR, "media"),
 )
-# Application definition
+
 ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,10 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'testapp',
-    'apps.users'
+    'apps.blogs',
+    'rest_framework',
+    'apps.users',
 ]
-AUTH_USER_MODEL = 'testapp.MyUser'
+AUTH_USER_MODEL = 'blogs.MyUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

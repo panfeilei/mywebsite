@@ -80,9 +80,9 @@
     
     function getComment_replay(){
         blog_id = getBlogId('id')
-        $.get("/getdata/?blogid=" +blog_id+ "&action=getComment",function(data, status){
+        $.get("/getcomment/?blogid=" +blog_id,function(data, status){
             comment_div = $(".comment-list")
-            comment_json = JSON.parse(data);
+            comment_json = data;
             //comment_obj = $(comment_html);
             //console.log(comment_json);
             for(var comment_item of comment_json){

@@ -1,5 +1,6 @@
 from django.db import models
-from testapp.models import getFileDict
+
+
 # Create your models here.
 class UserInfo(models.Model):
     name = models.CharField(max_length=50, unique=True, default="")

@@ -36,7 +36,7 @@ def getFileDict(filed):
 class Reply(models.Model):
     #reply_id = models.CharField(primary_key=True,unique=True,max_length=100)
     reply_id = models.AutoField(primary_key=True)
-    to_commentId = models.IntegerField()
+    to_commentId = models.ForeignKey(Comment, related_name='reply_list',on_delete=models.CASCADE)
     to_blogId = models.CharField(max_length=50)
     to_username = models.CharField(max_length=20)
     content = models.TextField()

@@ -1,11 +1,13 @@
-from django.shortcuts import render
-from django.http import HttpResponse,JsonResponse
-from testapp.models import MyUser,Blog,Comment
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-from apps.users.models import UserInfo, UnreadMessage as Unread, Message
 import random
-from testapp.models import getFileDict
+
+from django.http import HttpResponse,JsonResponse
+from django.shortcuts import render
+
+from apps.blogs.models import MyUser,Blog
+from apps.blogs.models import getFileDict
+from apps.users.models import UserInfo, UnreadMessage as Unread, Message
+
+
 def home(request):
     userId = request.user.userId
     print(userId)

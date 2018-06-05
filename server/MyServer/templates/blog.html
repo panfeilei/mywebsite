@@ -7,67 +7,104 @@
 <div class="container-fluid" style="padding-left: 0px;">
     <div class="row">
         <div class="col-xs-12 col-md-12">
-            <div style="margin:20px;width:100%;">
-                <div id="BlogTitle" style="width:100%;text-align:center;font-size:30px;">{{Blog.title}}</div>
-                <div id="BlogContend">{{Blog.content|safe}}</div>
-            </div>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-            comment
-            </h3>
-        </div>
-        <div class="panel-body">
-            <div style="border-bottom:2px #269abc solid;height:100px; margin-bottom:20px;">
-                <form method="post" class="comment-form" action="/uploadData/?action=uploadComment">
-                    {% csrf_token %}
-                    <textarea id="comment_text" style="resize: none;width:100%;" name="content" required></textarea>
-                    <button class="btn btn-info" type="submit" style="float:right" >ok</button>
-                </form>
-            </div>
-            <div id="comment-content">
-                <ul class="comment-list">
-                    <li class="media" hidden>
-                        <div class="media-left">
-                            <a>
-                                <img src="/media/head.jpg" class="img-circle" style="width:50px"/>
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <h4>username</h4>
-                            <p>comment-conten111t</p>
-                            <div id="comment-foot">
-                                <span>2018.01.22</span>
-                                <a class="reply_a">reply</a>
+            <div class='blog-main-panel '>
+                <div class="content-wrapper blog-main-width">
+                    <div class='blog-personal'>
+                        <div class='panel panel-default'>
+                            <div class='panel-heading'>
+                                <h6>个人资料</h6>
                             </div>
-                            <div>
-                                <ul id="replay-list" style="list-style:none;" class="media-list">
-                                    <li class="media">
-                                        <div class="media-left">
-                                            <a>
-                                                <img src="/media/head.jpg" class="img-circle" style="width:30px"/>
-                                            </a>
-                                        </div>
-                                        <div class="media-body">
-                                            reply
-                                            <div id="comment-foot">
-                                                <span>2018.01.22</span>
-                                                <a>reply</a>
+                            <div class="panel-body">
+                                <div class='profile-intro content-wrapper'>
+                                    <div class='avatar-box'>
+                                        <a>
+                                            <img class='img-circle avatar_pic' src='http://127.0.0.1:8000/media/head.jpg'>
+                                            </img>
+                                        </a>
+                                    </div>
+                                    <div class='user-info'>
+                                        <p>username</p>
+                                    </div>
+                                    <div class='opt-box'>
+                                        <a class='inter-button'>关注</a>
+                                    </div>
+                                </div>
+                                <div class='data-info content-wrapper'>
+                                    <div >原创</div>
+                                    <div >评论</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='blog-main'>
+                        <div class='panel'>
+                            <div class='panel-body'>
+                                <div id="BlogTitle" style="width:100%;text-align:center;font-size:30px;">{{Blog.title}}</div>
+                                <div id="BlogContend">{{Blog.content|safe}}</div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">comment</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div style="border-bottom:2px #269abc solid;height:100px; margin-bottom:20px;">
+                                    <form method="post" class="comment-form" action="/uploadData/?action=uploadComment">
+                                        {% csrf_token %}
+                                        <textarea id="comment_text" style="resize: none;width:100%;" name="content" required></textarea>
+                                        <button class="btn btn-info" type="submit" style="float:right" >ok</button>
+                                    </form>
+                                </div>
+                                <div id="comment-content">
+                                    <ul class="comment-list">
+                                        <li class="media" hidden>
+                                            <div class="media-left">
+                                                <a>
+                                                    <img src="/media/head.jpg" class="img-circle" style="width:50px"/>
+                                                </a>
                                             </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                            <div class="media-body">
+                                                <h4>username</h4>
+                                                <p>comment-conten111t</p>
+                                                <div id="comment-foot">
+                                                    <span>2018.01.22</span>
+                                                    <a class="reply_a">reply</a>
+                                                </div>
+                                                <div>
+                                                    <ul id="replay-list" style="list-style:none;" class="media-list">
+                                                        <li class="media">
+                                                            <div class="media-left">
+                                                                <a>
+                                                                    <img src="/media/head.jpg" class="img-circle" style="width:30px"/>
+                                                                </a>
+                                                            </div>
+                                                            <div class="media-body">
+                                                                reply
+                                                                <div id="comment-foot">
+                                                                    <span>2018.01.22</span>
+                                                                    <a>reply</a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                </div>
                             </div>
-
                         </div>
-                    </li>
-                </ul>
 
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 {% endblock %}
 
