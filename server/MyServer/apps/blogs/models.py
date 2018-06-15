@@ -3,17 +3,20 @@ from django.contrib.auth.models import User, AbstractBaseUser,BaseUserManager,Ab
 from django import forms
 from django.utils.http import urlquote
 from django.core.serializers.json import DjangoJSONEncoder
+
+from apps.users.models import UserInfo
 # Create your models here.
 class MyUser(AbstractUser):
     #username = models.CharField(max_length=50, unique=True, default="")
-    userId = models.IntegerField(unique=True, default=0)
+    userId = models.AutoField(unique=True, default=0,primary_key=True)
     #userid = models.AutoField(primary_key=True)
-    headlink = models.CharField(max_length=50, default="/")
+
 
 class Blog(models.Model):
     blog_id = models.CharField(primary_key=True,unique=True,max_length=100)
     title = models.CharField(max_length=50)
-    author = models.CharField(max_length=50)
+    authorId = models.CharField(max_length=50)
+    authorName = models.CharField(max_length=50)
     link = models.URLField()
     descript =  models.CharField(max_length=100,null=True)
     content = models.TextField()
@@ -22,10 +25,11 @@ class Blog(models.Model):
 class Comment(models.Model):
     #comment_id = models.CharField(primary_key=True,unique=True,max_length=100)
     comment_id = models.AutoField(primary_key=True)
+    userInfo = models.ForeignKey(UserInfo,on_delete=models.CASCADE, related_name='userInfo')
     to_blogId = models.CharField(max_length=50)
     time = models.DateTimeField(auto_now=True)
     content = models.TextField()
-    userid = models.IntegerField()
+    name = models.CharField(max_length=50)
     def toJSON(self):
         import json
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
@@ -41,11 +45,11 @@ class Reply(models.Model):
     to_username = models.CharField(max_length=20)
     content = models.TextField()
     time = models.DateTimeField(auto_now=True)
-    userid = models.IntegerField()
+    userInfo = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
     def toJSON(self):
         import json
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
 
 class testmedel(models.Model):
-    title = forms.CharField(max_length=50)
-    file = forms.FileField()
+    title = models.CharField(max_length=20)
+    content = models.CharField(max_length=50)

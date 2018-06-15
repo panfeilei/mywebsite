@@ -23,10 +23,10 @@
                                         </a>
                                     </div>
                                     <div class='user-info'>
-                                        <p>username</p>
+                                        <p class='author-name'>username</p>
                                     </div>
                                     <div class='opt-box'>
-                                        <a class='inter-button'>关注</a>
+                                        <a class=' inter-button '>关注</a>
                                     </div>
                                 </div>
                                 <div class='data-info content-wrapper'>
@@ -42,6 +42,16 @@
                             <div class='panel-body'>
                                 <div id="BlogTitle" style="width:100%;text-align:center;font-size:30px;">{{Blog.title}}</div>
                                 <div id="BlogContend">{{Blog.content|safe}}</div>
+                                <div class='Blog-bottom'>
+                                    <div class='pageActive conten-center'>
+                                        <span class='pageActive-item' onclick="favFun(199, 'fav', this)">
+                                            <span class='pageActive-item-text'>收藏</span> 
+                                            <span class='pageActive-item-num'>0</span>
+                                        </span>
+                                        <a class='pageActive-item' onclick="userev(199, 'praise', this)">点赞</a>
+                                    </div>
+                                    
+                                </div>
                             </div>
                         </div>
 
@@ -108,4 +118,85 @@
 </div>
 {% endblock %}
 
+{% block Jscontent%}
+    
+    var localBlogId = getBlogId();
+    favFun = function(userId, action, itemTmp){
+        var item = $(itemTmp);
+        var itemText = $('.pageActive-item-text');
+        var old = parseInt($('.pageActive-item-num').text());
+        var clsStr = item.attr('class');
+        console.log(clsStr)
+        if(clsStr.indexOf('alreadyFav') == -1)
+        {
+            $.ajax({
+                type:'POST',
+                url:'http://127.0.0.1:8000/favourite/',
+                success:function(data,status){
+                    if(status == 'success')
+                    {
+                        itemText.text('取消收藏');
+                        $('.pageActive-item-num').text(old+1);
+                        item.addClass('alreadyFav');
+                    }
+                },
+                data:'blogId='+localBlogId+'&csrfmiddlewaretoken=' + getcsrf(document.cookie),
+            })
+            
+        }
+        else{
+            $.ajax({
+                type:'DELETE',
+                url:'http://127.0.0.1:8000/favourite/'+localBlogId+'/',
+                headers:{
+                    'X-CSRFTOKEN':getcsrf(document.cookie)
+                },
+                success:function(data,status){
+                    itemText.text('收藏');
+                    $('.pageActive-item-num').text(old-1);
+                    item.removeClass('alreadyFav');
+                }
+            })
+        }
+
+    };
+    praFun = function(userId, action, itemTmp){}
+
+    <!-- console.log(document.cookie) -->
+    function getcsrf(cookie){
+        var patt = /(?<=csrftoken=)(\w)*/;
+        var matches = patt.exec(cookie)
+        var val = matches[0];
+        return val;
+    }
+    
+    interButtom = $(".inter-button");
+    interButtom.click(function(){
+        if(interButtom.text() == '关注'){
+            $.ajax({
+                method:'POST',
+                url:'http://127.0.0.1:8000/interest/',
+                success:function(data,status){
+                    interButtom.text('已关注');
+                    interButtom.addClass('inter-gray-button');
+                },
+                data:'toUserId='+getAuthorId()+'&csrfmiddlewaretoken=' + getcsrf(document.cookie),
+            })
+        }
+        else if(interButtom.text() == '已关注'){
+            $.ajax({
+                method:'DELETE',
+                url:'http://127.0.0.1:8000/interest/'+getAuthorId(),
+                headers:{
+                    'X-CSRFTOKEN':getcsrf(document.cookie)
+                },
+                success:function(data,status){
+                    interButtom.text('关注');
+                    interButtom.removeClass('inter-gray-button');
+                },
+            })
+        }
+        
+    });
+{% endblock %}
 

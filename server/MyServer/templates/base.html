@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
         <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="http://malsup.github.com/jquery.form.js"></script>
+        <script src="http://img9.tongzhuo100.com/js/jquery.form.min.js"></script>
         <link rel="stylesheet" href="{% static "css/mycss.css" %}"></link>
         {% block Headcontent %}{% endblock %}
     </head>
@@ -19,8 +19,9 @@
 	
 	<script type="text/javascript">
 		$(function(){
-			{% block Jscontent %}{% endblock %}
+			
 			$.get('/users/getMessage', function(data, status){
+                console.log('getmessage')
 				var all = parseInt(data['all']);
 				var letter = parseInt(data['letter']);
 				var comment = parseInt(data['comment']);
@@ -46,7 +47,7 @@
 			item.text(oldText + text);
 		}
 	
-	
+	{% block Jscontent %}{% endblock %}
 	</script>
 	
 </html>

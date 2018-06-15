@@ -16,7 +16,7 @@ def home(request):
         print('user is none')
         return HttpResponse("user is none")
     else:
-        blogList = Blog.objects.filter(author=userId)
+        blogList = Blog.objects.filter(authorId=userId)
         print('user icon' + u[0].iconUrl)
         return render(request, 'users/user-home.html', {'userinfo':u[0], 'bloglist':blogList})
 

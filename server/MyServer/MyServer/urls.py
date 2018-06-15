@@ -21,12 +21,16 @@ from rest_framework.routers import DefaultRouter
 
 from DjangoUeditor import views as editor_view
 from apps.blogs import views as test_view
-
+from apps.operation import views as operate_view
 
 router = DefaultRouter()
-router.register(r'testblogs', test_view.BlogViewSet)
+router.register(r'testblogs', test_view.BlogViewSet, base_name='title')
 router.register(r'getcomment', test_view.CommentViewSet, base_name='getcomment1')
 router.register(r'getreply', test_view.ReplyViewSet)
+router.register(r'favourite', operate_view.FavouViewSet)
+router.register(r'interest', operate_view.InterViewSet, base_name='interest')
+router.register(r'testview', test_view.testViewSet)
+
 urlpatterns = [
     url(r"^$", test_view.index),
     url(r'^', include(router.urls)),
@@ -36,10 +40,10 @@ urlpatterns = [
     url(r'^logout/', test_view.mylogout, name='logout'),
     url(r'^test1/', test_view.testpost),
     url(r'^uploadData/', test_view.uploadData),
-    url(r'^getdata/', test_view.getdata),
     url(r'^editor/',test_view.editor, name='edi'),
     url(r'^constrol/', editor_view.get_ueditor_controller),
     url(r'^test/',test_view.test),
+    url(r'^blogInfo/(?P<blogId>(\w)*)/', test_view.BlogInfo.as_view()),
     url(r'^blog/(\w+)/', test_view.blog_view, name="blogUrl"),
     url(r'^upload-icon/', test_view.uploadIcon, name='uploadIconUrl'),
     url(r'^users/', include('apps.users.urls', namespace='userapp')),

@@ -14,9 +14,32 @@
     
 }
 
+.Blog-bottom
+{
+    margin-top:20px;
+}
 .data-info div
 {
     margin:10px 10px;
+}
+
+.pageActive-item{
+    width: 100px;
+    padding: 12px 15px;
+    color: #fff;
+    background: darkcyan;
+    margin-right: 5px;
+    text-decoration: none;
+    border-radius: 5px;
+    
+    text-align: center;
+}
+
+.pageActive-item:hover
+{
+    text-decoration:none;
+    cursor: pointer;
+    color: #333;
 }
 
 .opt-box
@@ -34,6 +57,12 @@
     line-height:28px;
     margin: 0 auto;
     border:0.5px solid #ca0c16;
+}
+
+.inter-gray-button
+{
+    color:#999;
+    border:0.5px solid #999;
 }
 
 .user-info
@@ -300,6 +329,19 @@
 .mainindex_l
 {
 	width:800px;
+}
+
+.user-home-width
+{
+	width:1000px;
+}
+
+.conten-center
+{
+    display:flex;
+    margin:0 auto;
+    align-items:center;
+    justify-content:center;
 }
 .content-wrapper
 {

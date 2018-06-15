@@ -41,6 +41,7 @@
                                 </div>\
                             </div>\
                         </li>';
+    var authorId = 0;
     function getUrlParam(name){
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
         var r = window.location.search.substr(1).match(reg); //匹配目标参数
@@ -64,6 +65,25 @@
         $('.comment-form').append('<input type="hidden" name="to_blogId" value=\'' + blogId + '\'>');
         var commentForm = $('.comment-form')[0]
         FormSubmit(commentForm);
+        $.get('http://127.0.0.1:8000/blogInfo/{id}/'.replace('{id}', blogId), function(data, status){
+            blogInfo = data['blogInfo'];
+            authorInfo = data['authorInfo'];
+            authorId = authorInfo['authorId'];
+            $('.pageActive-item-num').text(blogInfo['favorNum']);
+            $('.author-name').text(authorInfo['UserName']);
+            isIntere = $('.inter-button');
+            if(authorInfo['isIntere'] == true){
+                isIntere.addClass('inter-gray-button');
+                isIntere.text('已关注');
+            }
+            
+            if(blogInfo['isFavou'] == true){
+                $('.pageActive-item-text').text('取消收藏');
+                $('.pageActive-item').addClass('alreadyFav');
+            }
+            // console.log(blogInfo['isFavou']);
+            
+        })
     }
     
     function initComment(){
@@ -71,38 +91,35 @@
         BindEvent();
     }
     
-    function uploadComment(){
-        var comment = {}
-        comment['content'] = $("#comment_text").val()
-        comment['to_blogId'] = getBlogId('id')
-        $.post("/uploadData/?action=uploadComment",comment);
+    function getAuthorId()
+    {
+        return authorId;
     }
     
     function getComment_replay(){
         blog_id = getBlogId('id')
-        $.get("/getcomment/?blogid=" +blog_id,function(data, status){
+        $.get("/getcomment/{blogid}".replace('{blogid}', blog_id),function(data, status){
             comment_div = $(".comment-list")
-            comment_json = data;
+            //comment_json = JSON.parse(data);
             //comment_obj = $(comment_html);
-            //console.log(comment_json);
-            for(var comment_item of comment_json){
+            console.log(data);
+            for(var comment_item of data){
                 comment_obj = $(comment_html);
-                comment_obj.find('.comment-username').text(comment_item.username);
-                comment_obj.find('.comment-time').text(comment_item.time);
-                comment_obj.find('.comment-id').text(comment_item.comment_id);
-                comment_obj.find('.comment-content').text(comment_item.content);
-                comment_obj.find('.comment-icon').attr('src',comment_item.headlink);
-                // console.log(comment_item.headlink);
+                comment_obj.find('.comment-username').text(comment_item['userInfo']['name']);
+                comment_obj.find('.comment-time').text(comment_item['time']);
+                comment_obj.find('.comment-id').text(comment_item['comment_id']);
+                comment_obj.find('.comment-content').text(comment_item['content']);
+                comment_obj.find('.comment-icon').attr('src',comment_item['userInfo']['headlink']);
                 var reply_obj = null;
                 for(var reply_item of comment_item.reply_list)
                 {
                     reply_obj = $(reply_item_html);
-                    reply_obj.find('.reply-toUsername').text('@'+reply_item.to_username);
-                    reply_obj.find('.reply-content').text(reply_item.content);
-                    reply_obj.find('.reply-username').text(reply_item.username);
-                    reply_obj.find('.reply-time').text(reply_item.time);
-                    reply_obj.find('.replay-icon').attr('src', reply_item.headlink);
-                    console.log(reply_item.username);
+                    reply_obj.find('.reply-toUsername').text('@'+reply_item['to_username']);
+                    reply_obj.find('.reply-content').text(reply_item['content']);
+                    reply_obj.find('.reply-username').text(reply_item['userInfo']['name']);
+                    reply_obj.find('.reply-time').text(reply_item['time']);
+                    reply_obj.find('.replay-icon').attr('src', reply_item['userInfo']['headlink']);
+                    //console.log(reply_item.username);
                     comment_obj.find('.reply-list').append(reply_obj);
                 }
                 console.log(comment_obj.find('.reply-list').html());

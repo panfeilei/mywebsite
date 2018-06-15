@@ -6,21 +6,24 @@ from django.conf import settings
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect
 from django.template import RequestContext,Template,loader
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework import generics, mixins
 from rest_framework.response import Response
+from django.views import View
+from django.shortcuts import get_list_or_404
 
-from apps.blogs.models import  Blog
+from apps.blogs.models import  Blog,MyUser
 from apps.blogs.models import  Comment, Reply
 from apps.blogs.models import testmedel
 from apps.users.models import UserInfo
 from apps.users.views import addMessage
-from .serializers import BlogSerializer,CommentSerializer, ReplySerializer
-
+from .serializers import BlogSerializer,CommentSerializer, ReplySerializer,testModelSerializer
+from apps.operation.models import Favorite, Interest
 MEDIA_PATH = settings.MEDIA_ROOT
 
 # Create your views here.
@@ -101,25 +104,30 @@ def uploadData(request):
         autor = UserInfo.objects.get(userId=user.userId)
         blog_id = str(hash(str(now) + title)).replace('-', '')
         link = "http://127.0.0.1:8000/blog/%s" %  (blog_id)
-        b = Blog(title=title, content=content, link=link, descript=descript, blog_id=blog_id, author=autor.userId)
+        b = Blog(title=title, content=content, link=link,authorName=autor.name ,
+                 descript=descript, blog_id=blog_id, authorId=autor.userId)
         b.save()
     elif action == "uploadComment":
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
         b = Blog.objects.get(blog_id = to_blogId)
-        userid = request.user.userId
-        c = Comment(content=content, to_blogId=to_blogId, userid=userid)
+        userId = request.user.userId
+        userInfo = UserInfo.objects.get(userId=userId)
+        name = request.user.username
+        c = Comment(content=content, to_blogId=to_blogId,
+                    name=name,userInfo=userInfo)
         c.save()
-        addMessage(request.user.username, userid, content,
-                   b.author, "comment", b.title, b.link)
+        addMessage(request.user.username, userId, content,
+                   b.authorId, "comment", b.title, b.link)
     elif action == "uploadReply":
         content = request.POST.get('content')
         to_blogId = request.POST.get('toblogId')
         to_commentId = request.POST.get('toCommentId')
         to_username = request.POST.get('toUsername')
-        userid = request.user.userId
-        c = Comment.objects.get(to_blogId=to_blogId)
-        r = Reply(content=content, to_blogId=to_blogId, to_commentId=c, userid=userid, to_username=to_username)
+        userInfo = UserInfo.objects.get(userId=request.user.userId)
+        c = Comment.objects.get(comment_id=to_commentId)
+        r = Reply(content=content, to_blogId=to_blogId,
+                  to_commentId=c, userInfo=userInfo, to_username=to_username)
         r.save()
     return HttpResponse('ok')
 
@@ -131,34 +139,7 @@ def mylogout(request):
         return redirect('login')
     else:
         return HttpResponse('not user')
-    
-def getdata(request):
-    action = request.GET.get('action')
-    print(action)
-    if action == "getComment":
-        blog_id = request.GET.get('blogid')
-        print(blog_id)
-        comment_list = []
-        comment = Comment.objects.filter(to_blogId=blog_id).order_by('time')
-        reply_all = Reply.objects.filter(to_blogId=blog_id)
-        for c in comment:
-            comentjson = c.toJSON()
-            user = UserInfo.objects.get(userId=c.userid)
-            print(c.time.strftime('%a, %b %d %H:%M'))
-            comentjson['username'] = user.name
-            comentjson['headlink'] = user.iconUrl
-            reply_list = []
-            reply = reply_all.filter(to_commentId=c.comment_id)
-            for r in reply:
-                reply_item = r.toJSON()
-                user_item = UserInfo.objects.get(userId=c.userid)
-                reply_item['username'] = user_item.name
-                reply_item['headlink'] = user_item.iconUrl
-                reply_list.append(reply_item)
-            comentjson['reply_list'] = reply_list
-            comment_list.append(comentjson)
-        return HttpResponse(json.dumps(comment_list, cls=DjangoJSONEncoder))
-    return HttpResponse('None')
+
     
 @login_required
 def index(request):
@@ -174,17 +155,53 @@ class BlogViewSet(viewsets.ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
 
-class CommentViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    #queryset = Comment.objects.all()
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    lookup_field = 'to_blogId'
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance,many=True)
+        return Response(serializer.data)
 
-    def get_queryset(self):
-        id = self.request.query_params['blogid']
-        print(id)
-        queryset = Comment.objects.filter(to_blogId=id)
-        return queryset
-
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        assert lookup_url_kwarg in self.kwargs, (
+            'Expected view %s to be called with a URL keyword argument '
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            'attribute on the view correctly.' %
+            (self.__class__.__name__, lookup_url_kwarg)
+        )
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_list_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 class ReplyViewSet(viewsets.ModelViewSet):
     queryset = Reply.objects.all()
     serializer_class = ReplySerializer
+
+class testViewSet(viewsets.ModelViewSet):
+    queryset = testmedel.objects.all()
+    serializer_class = testModelSerializer
+
+
+class BlogInfo(View):
+    def get(self, request, blogId):
+        resp = {}
+        user = request.user
+        fav = Favorite.objects.filter(blogId=blogId)
+        isfav = fav.filter(user=user.userId)
+        blog = Blog.objects.get(blog_id=blogId)
+        author = MyUser.objects.get(userId=blog.authorId)
+        BlogNum = Blog.objects.filter(authorId=blog.authorId)
+        inter = Interest.objects.filter(Q(toUserId=author), Q(user=user.userId))
+        resp['blogInfo'] = {'favorNum': len(fav),
+                            'isFavou':len(isfav) > 0}
+        resp['authorInfo'] = {'UserName': blog.authorName,
+                            'BlogNum': len(BlogNum),
+                            'authorId':author.userId,
+                            'isIntere': len(inter) >0}
+        print(str(resp))
+        return JsonResponse(resp)

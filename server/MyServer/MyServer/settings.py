@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.blogs',
+    'apps.operation',
     'rest_framework',
+    'corsheaders',
     'apps.users',
 ]
 AUTH_USER_MODEL = 'blogs.MyUser'
@@ -54,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -82,7 +85,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'MyServer.wsgi.application'
-
+CORS_ORIGIN_WHITELIST = (
+      'localhost:8000',
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
