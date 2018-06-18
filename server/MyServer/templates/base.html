@@ -25,6 +25,8 @@
 				var all = parseInt(data['all']);
 				var letter = parseInt(data['letter']);
 				var comment = parseInt(data['comment']);
+                var interest = parseInt(data['interest']);
+                var sys = parseInt(data['sys']);
 				if(all >0){
 					var messageAllItem = $('.message-all');
 					appendText(messageAllItem, '(' + all + ')');
@@ -37,6 +39,16 @@
 				if(comment > 0){
 					var comment_item = $('.message-comment');
 					appendText(comment_item, '(' + comment + ')');
+				}
+                
+                if(interest > 0){
+					var comment_item = $('.message-interest');
+					appendText(comment_item, '(' + interest + ')');
+				}
+                
+                if(sys > 0){
+					var comment_item = $('.message-sys');
+					appendText(comment_item, '(' + sys + ')');
 				}
 					
 			})

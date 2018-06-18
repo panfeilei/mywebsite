@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'apps.users',
 ]
-AUTH_USER_MODEL = 'blogs.MyUser'
+AUTH_USER_MODEL = 'users.MyUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

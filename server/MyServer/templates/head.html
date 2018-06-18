@@ -29,8 +29,10 @@
 					<span class="message-icon">
 						<a class="message-all">消息</a>
 						<ul class="messageNav-list">
-							<li><a class="message-comment">评论</a></li>
+                            <li><a class="message-sys">系统消息</a></li>
+                            <li><a class="message-comment">评论</a></li>
 							<li><a class="message-letter">私信</a></li>
+                            <li><a class="message-interest">关注</a></li>
 						</ul>
 					</span>
 					<a href={% url 'userapp:PersonalZoneUrl' %}>{{ user.username }}</a>

@@ -22,6 +22,7 @@ from rest_framework.routers import DefaultRouter
 from DjangoUeditor import views as editor_view
 from apps.blogs import views as test_view
 from apps.operation import views as operate_view
+from apps.users.views import BlogMsgViewSet
 
 router = DefaultRouter()
 router.register(r'testblogs', test_view.BlogViewSet, base_name='title')
@@ -30,6 +31,7 @@ router.register(r'getreply', test_view.ReplyViewSet)
 router.register(r'favourite', operate_view.FavouViewSet)
 router.register(r'interest', operate_view.InterViewSet, base_name='interest')
 router.register(r'testview', test_view.testViewSet)
+
 
 urlpatterns = [
     url(r"^$", test_view.index),

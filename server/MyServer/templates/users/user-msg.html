@@ -18,35 +18,40 @@
 						<ul class="nav nav-tabs">
 							<li class="active"><a data-toggle="tab" href="#comment">评论</a></li>
 							<li><a data-toggle="tab" href="#letter">私信</a></li>
+                            <li><a data-toggle="tab" href="#interest">关注</a></li>
+                            <li><a data-toggle="tab" href="#sysMSg">系统消息</a></li>
 						</ul>
 					</div>
 					
 					<div class="panel-body">
 						<div class="tab-content">
-						<div class="tab-pane in active" id="comment">
-							<ul class="message-list">
-								<li class="message-list-item">
-									<div>
-										<span class="message-list-user"></span>
-										<span class="message-list-type"></span>
-										<span><a class="message-list-link"></a></span>
-										<span class="message-list-time"></span>
-									</div>
-								</li>
-								
-								<li class="message-list-item unread-item">
-									<div>
-										<span class="message-list-user"></span>
-										<span class="message-list-type"></span>
-										<span><a class="message-list-link"></a></span>
-										<span class="message-list-time"></span>
-									</div>
-								</li>
-							</ul>
-							
+                            <div class="tab-pane in active" id="comment">
+                                <ul class="message-list">
+                                    <li class="message-list-item">
+                                        <div>
+                                            <span class="message-list-user"></span>
+                                            <span class="message-list-type"></span>
+                                            <span><a class="message-list-link"></a></span>
+                                            <span class="message-list-time"></span>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="message-list-item unread-item">
+                                        <div>
+                                            <span class="message-list-user"></span>
+                                            <span class="message-list-type"></span>
+                                            <span><a class="message-list-link"></a></span>
+                                            <span class="message-list-time"></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane" id="letter">私信</div>
+                            <div class="tab-pane" id="interest">关注</div>
+                            <div class="tab-pane" id="sysMSg">系统消息</div>
 						</div>
-						<div class="tab-pane" id="letter">私信</div>
-						</div>
+                        
+                        
 					</div>
 					
 				</div>
@@ -57,36 +62,25 @@
 		{% endblock %}
 
 		{% block Jscontent%}
-			$.get('/users/getmessageinfo?type=comment', function(data, state){
+			$.get('/users/getmsginfo/', function(data, state){
 				console.log(data);
 				var msgList = $('.message-list');
 				var msgString = $('.message-list-item').prop('outerHTML');
-				var unReadMsgString = $('.unread-item').prop('outerHTML');
 				$('.message-list-item').hide();
-				for(msg of data['unread'])
-				{
-					
-					var msgItem = $(unReadMsgString);
-					msgItem.find('.message-list-user').text(msg['name']);
-					msgItem.find('.message-list-time').text(msg['time']);
-					msgItem.find('.message-list-link').text(msg['fromBlog']);
-					msgItem.find('.message-list-link').attr('href', msg['link']);
-					if(msg['type'] == 'comment')
-						msgItem.find('.message-list-type').text('回复了帖子');
-					msgList.append(msgItem);
-				}
-				for(msg of data['read'])
+				for(msg of data['blog'])
 				{
 					var msgItem = $(msgString);
-					msgItem.find('.message-list-user').text(msg['name']);
+					msgItem.find('.message-list-user').text(msg['user']['name']);
 					msgItem.find('.message-list-time').text(msg['time']);
-					msgItem.find('.message-list-link').text(msg['fromBlog']);
-					msgItem.find('.message-list-link').attr('href', msg['link']);
-					if(msg['type'] == 'comment')
+					msgItem.find('.message-list-link').text(msg['blog']['title']);
+					msgItem.find('.message-list-link').attr('href', msg['blog']['link']);
+					if(msg['msgType'] == 'CO')
 						msgItem.find('.message-list-type').text('回复了帖子');
+                        
+                    if(msg['isRead'] == false)
+                        msgItem.attr('class', 'unread-item');
 					msgList.append(msgItem);
-				}
-				
+				}			
 			});
 	   
 	   

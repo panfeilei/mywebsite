@@ -2,11 +2,19 @@ import random
 
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import generics
 
-from apps.blogs.models import MyUser,Blog
+from apps.blogs.models import Blog
 from apps.blogs.models import getFileDict
-from apps.users.models import UserInfo, UnreadMessage as Unread, Message
+from .models import MyUser
+from .serializers import UserMsgSerializer, SysMsgSerializer
 
+from apps.blogs.serializers import BlogMsgSerializer
+from apps.users.models import UserInfo
+from .models import SystemMessage, UserMessage
+from apps.blogs.models import BlogMessage
 
 def home(request):
     userId = request.user.userId
@@ -20,48 +28,24 @@ def home(request):
         print('user icon' + u[0].iconUrl)
         return render(request, 'users/user-home.html', {'userinfo':u[0], 'bloglist':blogList})
 
-def addMessage(name, userId, content, toUserId, type, fromBlog, link):
-    m = Unread(name=name, userId=userId, content=content,
-               toUserId=toUserId, type=type, fromBlog=fromBlog,
-               link=link)
-    m.save()
-
 def handleMessage(msg):
     pass
 
 def getMessage(request):
     userId = request.user.userId
     response = {}
-    print(userId)
-    allMessage = Unread.objects.filter(toUserId=userId)
-    response["all"] = len(allMessage)
-    response["comment"] = str(len(allMessage.filter(type="comment")))
-    response["letter"] = str(len(allMessage.filter(type="letter")))
+    user = UserInfo.objects.get(userId=userId)
+    blgMsg = BlogMessage.objects.filter(toUser=user, isRead=False)
+    sysMsg = SystemMessage.objects.filter(toUser=user, isRead=False)
+    usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
+    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg)
+    response["comment"] = str(len(blgMsg))
+    response["letter"] = str(len(usrMsg))
+    response['interest'] = str(len(usrMsg.filter(msgType='INT')))
+    response["sys"] = str(len(sysMsg))
     return JsonResponse(response)
 
 def getMessageInfo(request):
-    type = request.GET.get('type')
-    userId = request.user.userId
-    message={}
-    if type == 'comment':
-        unr = Unread.objects.filter(toUserId=userId, type=type)
-        read = Message.objects.filter(toUserId=userId, type=type)
-        readList = []
-        unreadList = []
-        for r in read:
-            d = getFileDict(r)
-            readList.append(d)
-        message['read'] = readList
-        for u in unr:
-            d = getFileDict(u)
-            unreadList.append(d)
-            m = Message.objects.createMessage(u)
-            m.save()
-        unr.delete()
-        message['unread'] = unreadList
-        return JsonResponse(message)
-    elif type == 'letter':
-        pass
     return render(request, 'users/user-msg.html')
 
 def apply(request):
@@ -87,3 +71,25 @@ def apply(request):
         else:
             print("apply error")
             return HttpResponse("apply register error")
+
+class BlogMsgViewSet(viewsets.ModelViewSet):
+    serializer_class = BlogMsgSerializer
+    queryset = BlogMessage.objects.all()
+    lookup_field = 'toUser'
+
+class AllMsgViewSet(viewsets.GenericViewSet):
+
+    def list(self, request, *args, **kwargs):
+        uerid = request.user.userId
+        blogQuerySet = BlogMessage.objects.filter(toUser=uerid)
+        userQuerySet = UserMessage.objects.filter(toUser=uerid)
+        sysQuerySet = SystemMessage.objects.filter(toUser=uerid)
+        blogSerializer = BlogMsgSerializer(blogQuerySet, many=True)
+        userSerializer = UserMsgSerializer(userQuerySet, many=True)
+        sysSerializer = SysMsgSerializer(sysQuerySet, many=True)
+        resp = {'blog': blogSerializer.data,
+                'user': userSerializer.data,
+                'sys': sysSerializer.data}
+
+        return Response(resp)
+

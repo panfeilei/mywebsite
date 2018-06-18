@@ -179,7 +179,7 @@
 .messageNav-list
 {
 	overflow: hidden;
- 	min-width:70px; 
+ 	min-width:90px; 
 	max-height:0px; 
 	margin:0px;
 	position:absolute;
@@ -207,6 +207,7 @@
 .messageNav-list a
 {
 	color:black;
+    font-size:13px;
 }
 
 .navbar-tag

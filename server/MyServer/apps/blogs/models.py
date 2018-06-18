@@ -1,15 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractBaseUser,BaseUserManager,AbstractUser
-from django import forms
-from django.utils.http import urlquote
-from django.core.serializers.json import DjangoJSONEncoder
 
 from apps.users.models import UserInfo
 # Create your models here.
-class MyUser(AbstractUser):
-    #username = models.CharField(max_length=50, unique=True, default="")
-    userId = models.AutoField(unique=True, default=0,primary_key=True)
-    #userid = models.AutoField(primary_key=True)
 
 
 class Blog(models.Model):
@@ -23,7 +15,6 @@ class Blog(models.Model):
     time = models.DateTimeField(auto_now=True)
     
 class Comment(models.Model):
-    #comment_id = models.CharField(primary_key=True,unique=True,max_length=100)
     comment_id = models.AutoField(primary_key=True)
     userInfo = models.ForeignKey(UserInfo,on_delete=models.CASCADE, related_name='userInfo')
     to_blogId = models.CharField(max_length=50)
@@ -49,6 +40,14 @@ class Reply(models.Model):
     def toJSON(self):
         import json
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
+
+class BlogMessage(models.Model):
+    user = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='BlogUser')
+    toUser = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='BlogtoUser')
+    msgType = models.CharField(max_length=20, choices=(('RE','reply'), ('CO','comment')))
+    time = models.DateTimeField(auto_now=True)
+    isRead = models.BooleanField(default=False)
+    blog = models.ForeignKey(Blog,on_delete=models.CASCADE)
 
 class testmedel(models.Model):
     title = models.CharField(max_length=20)

@@ -17,13 +17,14 @@ from rest_framework.response import Response
 from django.views import View
 from django.shortcuts import get_list_or_404
 
-from apps.blogs.models import  Blog,MyUser
+from apps.blogs.models import  Blog
 from apps.blogs.models import  Comment, Reply
 from apps.blogs.models import testmedel
 from apps.users.models import UserInfo
-from apps.users.views import addMessage
+from apps.users.models import MyUser
 from .serializers import BlogSerializer,CommentSerializer, ReplySerializer,testModelSerializer
 from apps.operation.models import Favorite, Interest
+from apps.blogs.models import BlogMessage
 MEDIA_PATH = settings.MEDIA_ROOT
 
 # Create your views here.
@@ -113,12 +114,16 @@ def uploadData(request):
         b = Blog.objects.get(blog_id = to_blogId)
         userId = request.user.userId
         userInfo = UserInfo.objects.get(userId=userId)
+        authoruserInfo = UserInfo.objects.get(userId=b.authorId)
         name = request.user.username
-        c = Comment(content=content, to_blogId=to_blogId,
-                    name=name,userInfo=userInfo)
+        c = Comment(content=content,
+                    to_blogId=to_blogId,
+                    name=name,
+                    userInfo=userInfo)
         c.save()
-        addMessage(request.user.username, userId, content,
-                   b.authorId, "comment", b.title, b.link)
+        msg = BlogMessage(msgType='CO', user=userInfo, blog=b, toUser=authoruserInfo)
+        msg.save()
+
     elif action == "uploadReply":
         content = request.POST.get('content')
         to_blogId = request.POST.get('toblogId')
@@ -195,6 +200,7 @@ class BlogInfo(View):
         isfav = fav.filter(user=user.userId)
         blog = Blog.objects.get(blog_id=blogId)
         author = MyUser.objects.get(userId=blog.authorId)
+
         BlogNum = Blog.objects.filter(authorId=blog.authorId)
         inter = Interest.objects.filter(Q(toUserId=author), Q(user=user.userId))
         resp['blogInfo'] = {'favorNum': len(fav),
