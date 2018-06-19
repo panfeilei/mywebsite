@@ -40,7 +40,7 @@ def getMessage(request):
     usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
     response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg)
     response["comment"] = str(len(blgMsg))
-    response["letter"] = str(len(usrMsg))
+    response["letter"] = str(len(usrMsg.filter(msgType='CO')))
     response['interest'] = str(len(usrMsg.filter(msgType='INT')))
     response["sys"] = str(len(sysMsg))
     return JsonResponse(response)
@@ -77,8 +77,12 @@ class BlogMsgViewSet(viewsets.ModelViewSet):
     queryset = BlogMessage.objects.all()
     lookup_field = 'toUser'
 
-class AllMsgViewSet(viewsets.GenericViewSet):
+class UserMsgViewSet(viewsets.ModelViewSet):
+    serializer_class = UserMsgSerializer
+    queryset = UserMessage.objects.all()
+    lookup_field = 'toUser'
 
+class AllMsgViewSet(viewsets.GenericViewSet):
     def list(self, request, *args, **kwargs):
         uerid = request.user.userId
         blogQuerySet = BlogMessage.objects.filter(toUser=uerid)

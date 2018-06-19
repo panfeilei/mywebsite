@@ -1,16 +1,16 @@
 {% extends 'base.html'%}
 {% block Htmlcontent%}
-		<div class="row">
-			<div class="mynav">	
-                <div class="content-wrapper user-home-width">
-					<ul class="head-ul">
-                          <li  id="user-main" class="nav-curr"><a href="#public-blog">个人主页</a></li>
-                          <li id="user-message"><a href="{%url 'userapp:getmessageinfo' %}">消息</a></li>
-                    </ul>
-				</div>
-			</div>
-		</div>
-		<div class="tab-content">
+<div class="row">
+    <div class="mynav">	
+        <div class="content-wrapper user-home-width">
+            <ul class="head-ul">
+                <li  id="user-main" class="nav-curr"><a href="#public-blog">个人主页</a></li>
+                <li id="user-message"><a href="{%url 'userapp:getmessageinfo' %}">消息</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- 		<div class="tab-content">
 
 			<div class="container-fluid tab-pane in active" id="public-blog" style="padding-left: 0px;">
 				<div class="row">
@@ -95,7 +95,74 @@
 			</div>
 			<div class="tab-pane" id="comment">all comment</div>
 		</div>
-		{% endblock %}
+		 -->
+<div class="content-wrapper user-home-width">
+    <div class="panel panel-default home-user-info">
+        <div class='panel-body'>
+            <div class='vertical-center'>
+
+                <div class="icon-space">
+                    <a class="user-icon1">
+                        <img class='img-circle user-icon' src='/media/head.jpg'></img>
+                    </a>
+                    <div class="upload-logo" data-toggle="modal" data-target="#myModal">
+                        <div class="text-muted ">upload Img</div>
+                    </div>
+                    <div class="modal fade" id="myModal" >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body"> 
+                                    <div class="modal-body">
+                                        <img class="icon-preview"></img>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div>
+                                            <div class="btn btn-primary btn-lg file-input">
+                                                            openFile
+                                                <input type="file"></input>
+                                            </div>
+                                            <button  class="btn btn-primary  btn-lg upload-icon">
+                                                                Upload
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class='user-name'>
+                    <p> usernmae</p>
+                </div>
+
+                <div class="user-blogInfo">
+                    <div class="score-item">
+                                发表文章
+                        <p class="score-num">{{bloglist|length}}</p>
+                    </div>
+                    <div class="score-item">
+                                发表评论
+                        <p class="score-num">2</p>
+                    </div>
+                </div>
+
+                <div class='user-operate'>
+                    <a class='button green interest'>关注</a>
+                    <a class='button send-msg'>发私信</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="panel panel-default home-blog-info" >
+            asd
+    </div>
+
+</div>
+        {% endblock %}
 
 		{% block Jscontent%}
             $('.file-input input').change(function(){
@@ -108,15 +175,15 @@
                     $('.icon-preview').attr('src', imgFile);
                 };
                 reader.readAsDataURL(file);
-            
+
             })
-            
+
 			$('#user-message').click(function(){
 				$.get('/getmessageinfo', function(data,status){
-					
+
 				});
 			})
-			
+
             $('.upload-icon').click(function(){
                 var img = $('.file-input input')[0];
                 var formdata = new FormData();

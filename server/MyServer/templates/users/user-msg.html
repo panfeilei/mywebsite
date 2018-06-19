@@ -26,17 +26,8 @@
 					<div class="panel-body">
 						<div class="tab-content">
                             <div class="tab-pane in active" id="comment">
-                                <ul class="message-list">
+                                <ul class="blog-message-list">
                                     <li class="message-list-item">
-                                        <div>
-                                            <span class="message-list-user"></span>
-                                            <span class="message-list-type"></span>
-                                            <span><a class="message-list-link"></a></span>
-                                            <span class="message-list-time"></span>
-                                        </div>
-                                    </li>
-                                    
-                                    <li class="message-list-item unread-item">
                                         <div>
                                             <span class="message-list-user"></span>
                                             <span class="message-list-type"></span>
@@ -47,7 +38,11 @@
                                 </ul>
                             </div>
                             <div class="tab-pane" id="letter">私信</div>
-                            <div class="tab-pane" id="interest">关注</div>
+                            <div class="tab-pane" id="interest">
+                                <ul class="interest-list">
+                                    
+                                </ul>
+                            </div>
                             <div class="tab-pane" id="sysMSg">系统消息</div>
 						</div>
                         
@@ -64,11 +59,11 @@
 		{% block Jscontent%}
 			$.get('/users/getmsginfo/', function(data, state){
 				console.log(data);
-				var msgList = $('.message-list');
+				var BlogMsgList = $('.blog-message-list');
+                var intMsgList = $('.interest-list');
 				var msgString = $('.message-list-item').prop('outerHTML');
 				$('.message-list-item').hide();
-				for(msg of data['blog'])
-				{
+				for(msg of data['blog']){
 					var msgItem = $(msgString);
 					msgItem.find('.message-list-user').text(msg['user']['name']);
 					msgItem.find('.message-list-time').text(msg['time']);
@@ -76,11 +71,23 @@
 					msgItem.find('.message-list-link').attr('href', msg['blog']['link']);
 					if(msg['msgType'] == 'CO')
 						msgItem.find('.message-list-type').text('回复了帖子');
-                        
                     if(msg['isRead'] == false)
                         msgItem.attr('class', 'unread-item');
-					msgList.append(msgItem);
-				}			
+					BlogMsgList.append(msgItem);
+				}	
+                
+                for(msg of data['user']){
+                    if(msg['msgType'] = 'INT'){
+                        var msgItem = $(msgString);
+                        msgItem.find('.message-list-user').text(msg['user']['name']);
+                        msgItem.find('.message-list-type').text('关注了你');
+                        msgItem.find('.message-list-time').text(msg['time']);
+                        intMsgList.append(msgItem);
+                        
+                    }
+                    
+                    
+                }
 			});
 	   
 	   

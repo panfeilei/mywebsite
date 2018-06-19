@@ -15,7 +15,7 @@ class UserInfo(models.Model):
 class UserMessage(models.Model):
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='FromUser')
     toUser = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='ToUser')
-    msgType = models.CharField(max_length=20, choices=(('LE', 'letter'), ('INT','interest')))
+    msgType = models.CharField(max_length=20, null=False, blank=False,choices=(('LE', 'letter'), ('INT','interest')))
     time = models.DateTimeField(auto_now=True)
     isRead = models.BooleanField(default=False)
     content = models.CharField(max_length=200, null=True)
@@ -24,6 +24,6 @@ class SystemMessage(models.Model):
     toUser = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=30)
-    content = models.TextField()
+    content = models.TextField(null=True)
     isRead = models.BooleanField(default=False)
 

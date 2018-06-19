@@ -10,6 +10,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 class UserMsgSerializer(serializers.ModelSerializer):
     time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    user = UserInfoSerializer()
     class Meta:
         model = UserMessage
         fields = '__all__'
