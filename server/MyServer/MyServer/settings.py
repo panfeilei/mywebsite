@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'apps.users',
+    'apps.Ueditor',
 ]
 AUTH_USER_MODEL = 'users.MyUser'
 MIDDLEWARE = [
@@ -138,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

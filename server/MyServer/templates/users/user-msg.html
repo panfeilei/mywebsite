@@ -4,7 +4,7 @@
 			<div class="mynav">
                 <div class="content-wrapper user-home-width">
 					<ul class="head-ul">
-                          <li  id="user-main"><a href="{%url 'userapp:PersonalZoneUrl'%}">个人主页</a></li>
+                          <li  id="user-main"><a href={%url 'userapp:PersonalZoneUrl' user.userId%}>个人主页</a></li>
                           <li id="user-message" class="nav-curr"><a href="{%url 'userapp:getmessageinfo' %}">消息</a></li>
                     </ul>
 				</div>
@@ -37,7 +37,13 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="tab-pane" id="letter">私信</div>
+                            <div class="tab-pane" id="letter">
+                                <ul class="letter-list">
+                                    
+                                </ul>
+                            
+                            </div>
+                            
                             <div class="tab-pane" id="interest">
                                 <ul class="interest-list">
                                     
@@ -61,6 +67,7 @@
 				console.log(data);
 				var BlogMsgList = $('.blog-message-list');
                 var intMsgList = $('.interest-list');
+                var letterList = $('.letter-list');
 				var msgString = $('.message-list-item').prop('outerHTML');
 				$('.message-list-item').hide();
 				for(msg of data['blog']){
@@ -68,21 +75,22 @@
 					msgItem.find('.message-list-user').text(msg['user']['name']);
 					msgItem.find('.message-list-time').text(msg['time']);
 					msgItem.find('.message-list-link').text(msg['blog']['title']);
-					msgItem.find('.message-list-link').attr('href', msg['blog']['link']);
+					msgItem.find('.message-list-link').attr('href', msg['blog']['link']+'?from=message');
 					if(msg['msgType'] == 'CO')
 						msgItem.find('.message-list-type').text('回复了帖子');
                     if(msg['isRead'] == false)
-                        msgItem.attr('class', 'unread-item');
+                        msgItem.addClass('unread-item');
 					BlogMsgList.append(msgItem);
 				}	
                 
                 for(msg of data['user']){
-                    if(msg['msgType'] = 'INT'){
+                    if(msg['msgType'] = 'LE'){
                         var msgItem = $(msgString);
-                        msgItem.find('.message-list-user').text(msg['user']['name']);
-                        msgItem.find('.message-list-type').text('关注了你');
+                        msgItem.find('.message-list-user').text(msg['user']['username']);
+                        msgItem.find('.message-list-type').text('给你发送了消息');
+                        msgItem.find('.message-list-link').text("\"" + msg['content'] + "\"");
                         msgItem.find('.message-list-time').text(msg['time']);
-                        intMsgList.append(msgItem);
+                        letterList.append(msgItem);
                         
                     }
                     

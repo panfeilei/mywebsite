@@ -153,8 +153,10 @@ def UploadFile(request):
     action = request.GET.get("action")
     # 上传文件
     upload_field_name = {
-        "uploadfile": "fileFieldName", "uploadimage": "imageFieldName",
-        "uploadscrawl": "scrawlFieldName", "catchimage": "catcherFieldName",
+        "uploadfile": "fileFieldName", 
+        "uploadimage": "imageFieldName",
+        "uploadscrawl": "scrawlFieldName", 
+        "catchimage": "catcherFieldName",
         "uploadvideo": "videoFieldName",
     }
     UploadFieldName = request.GET.get(

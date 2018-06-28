@@ -9,6 +9,7 @@
         <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="http://img9.tongzhuo100.com/js/jquery.form.min.js"></script>
+        <script src="{% static "js/jquery.cookie.js" %}"></script>
         <link rel="stylesheet" href="{% static "css/mycss.css" %}"></link>
         {% block Headcontent %}{% endblock %}
     </head>
@@ -18,9 +19,10 @@
     </body>
 	
 	<script type="text/javascript">
+        
 		$(function(){
 			
-			$.get('/users/getMessage', function(data, status){
+			$.get('/users/getMessage/', function(data, status){
                 console.log('getmessage')
 				var all = parseInt(data['all']);
 				var letter = parseInt(data['letter']);

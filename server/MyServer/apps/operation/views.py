@@ -31,7 +31,6 @@ class InterViewSet(viewsets.ModelViewSet):
         toUser = UserInfo.objects.get(userId=request.data['toUserId'])
         u = UserMessage(user=user, toUser=toUser, msgType='INT')
         u.save()
-
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

@@ -1,0 +1,396 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+
+      
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="robots" content="NONE,NOARCHIVE" />
+      
+
+      <title>User Msg List – Django REST framework</title>
+
+      
+        
+          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap.min.css"/>
+          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap-tweaks.css"/>
+        
+
+        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/prettify.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/default.css"/>
+        
+      
+
+    
+  </head>
+
+  
+  <body class="">
+
+    <div class="wrapper">
+      
+        <div class="navbar navbar-static-top navbar-inverse"
+             role="navigation" aria-label="navbar">
+          <div class="container">
+            <span>
+              
+                <a class='navbar-brand' rel="nofollow" href='http://www.django-rest-framework.org'>
+                    Django REST framework
+                </a>
+              
+            </span>
+            <ul class="nav navbar-nav pull-right">
+              
+                
+                  <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            pan
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href='/api-auth/logout/?next=/users/usermessage/'>Log out</a></li>
+        </ul>
+    </li>
+                
+              
+            </ul>
+          </div>
+        </div>
+      
+
+      <div class="container">
+        
+          <ul class="breadcrumb">
+            
+              
+                <li><a href="/users/">Api Root</a></li>
+              
+            
+              
+                <li class="active"><a href="/users/usermessage/">User Msg List</a></li>
+              
+            
+          </ul>
+        
+
+        <!-- Content -->
+        <div id="content" role="main" aria-label="content">
+          
+
+          <div class="region"  aria-label="request form">
+          
+            <form id="get-form" class="pull-right">
+              <fieldset>
+                
+                  <div class="btn-group format-selection">
+                    <a class="btn btn-primary js-tooltip" href="/users/usermessage/" rel="nofollow" title="Make a GET request on the User Msg List resource">GET</a>
+
+                    <button class="btn btn-primary dropdown-toggle js-tooltip" data-toggle="dropdown" title="Specify a format for the GET request">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      
+                        <li>
+                          <a class="js-tooltip format-option" href="/users/usermessage/?format=json" rel="nofollow" title="Make a GET request on the User Msg List resource with the format set to `json`">json</a>
+                        </li>
+                      
+                        <li>
+                          <a class="js-tooltip format-option" href="/users/usermessage/?format=api" rel="nofollow" title="Make a GET request on the User Msg List resource with the format set to `api`">api</a>
+                        </li>
+                      
+                    </ul>
+                  </div>
+                
+              </fieldset>
+            </form>
+          
+
+          
+            <form class="button-form" action="/users/usermessage/" data-method="OPTIONS">
+              <button class="btn btn-primary js-tooltip" title="Make an OPTIONS request on the User Msg List resource">OPTIONS</button>
+            </form>
+          
+
+          
+
+          
+          </div>
+
+            <div class="content-main" role="main"  aria-label="main content">
+              <div class="page-header">
+                <h1>User Msg List</h1>
+              </div>
+              <div style="float:left">
+                
+                  
+                
+              </div>
+
+              
+
+              <div class="request-info" style="clear: both" aria-label="request info">
+                <pre class="prettyprint"><b>POST</b> /users/usermessage/</pre>
+              </div>
+
+              <div class="response-info" aria-label="response info">
+                <pre class="prettyprint"><span class="meta nocode"><b>HTTP 201 Created</b>
+<b>Allow:</b> <span class="lit">GET, POST, HEAD, OPTIONS</span>
+<b>Content-Type:</b> <span class="lit">application/json</span>
+<b>Vary:</b> <span class="lit">Accept</span>
+
+</span>{
+    &quot;id&quot;: 4,
+    &quot;time&quot;: &quot;2018-06-26 14:47&quot;,
+    &quot;msgType&quot;: &quot;LE&quot;,
+    &quot;isRead&quot;: true,
+    &quot;content&quot;: &quot;reg345dsf&quot;,
+    &quot;toUser&quot;: 51
+}</pre>
+              </div>
+            </div>
+
+            
+              
+                <div class="tabbable">
+                  
+                    <ul class="nav nav-tabs form-switcher">
+                      <li>
+                        <a name='html-tab' href="#post-object-form" data-toggle="tab">HTML form</a>
+                      </li>
+                      <li>
+                        <a name='raw-tab' href="#post-generic-content-form" data-toggle="tab">Raw data</a>
+                      </li>
+                    </ul>
+                  
+
+                  <div class="well tab-content">
+                    
+                      <div class="tab-pane" id="post-object-form">
+                        
+                          <form action="/users/usermessage/" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                            <fieldset>
+                              <input type='hidden' name='csrfmiddlewaretoken' value='SkOykEsQhpupJX17VyXqDw3Puz5t1m5BGkWrYupIooUezFpCEA0ztBKfSVFGeoWA' />
+                              
+
+  
+
+  
+    <div class="form-group ">
+  
+    <label class="col-sm-2 control-label ">
+      Time
+    </label>
+  
+
+  <div class="col-sm-10">
+    <input name="time" class="form-control" type="datetime-local"  value="2018-06-26 14:47" >
+
+    
+
+    
+  </div>
+</div>
+
+  
+
+  
+    
+  
+
+  
+    
+
+<div class="form-group">
+  
+    <label class="col-sm-2 control-label ">
+      MsgType
+    </label>
+  
+
+  <div class="col-sm-10">
+    <select class="form-control" name="msgType">
+      
+      
+          
+            <option value="LE" selected >letter</option>
+          
+      
+          
+            <option value="INT"  >interest</option>
+          
+      
+    </select>
+
+    
+
+    
+  </div>
+</div>
+
+  
+
+  
+    <div class="form-group horizontal-checkbox ">
+  
+    <label class="col-sm-2 control-label ">
+      IsRead
+    </label>
+  
+
+  <div class="col-sm-10">
+    <input type="checkbox" name="isRead" value="true" checked>
+
+    
+
+    
+  </div>
+</div>
+
+  
+
+  
+    <div class="form-group ">
+  
+    <label class="col-sm-2 control-label ">
+      Content
+    </label>
+  
+
+  <div class="col-sm-10">
+    <input name="content" class="form-control" type="text"  value="reg345dsf" >
+
+    
+
+    
+  </div>
+</div>
+
+  
+
+  
+    
+
+<div class="form-group">
+  
+    <label class="col-sm-2 control-label ">
+      ToUser
+    </label>
+  
+
+  <div class="col-sm-10">
+    <select class="form-control" name="toUser">
+      
+      
+          
+            <option value="51" selected >UserInfo object (51)</option>
+          
+      
+          
+            <option value="94"  >UserInfo object (94)</option>
+          
+      
+    </select>
+
+    
+
+    
+  </div>
+</div>
+
+  
+
+
+                              <div class="form-actions">
+                                <button class="btn btn-primary" title="Make a POST request on the User Msg List resource">POST</button>
+                              </div>
+                            </fieldset>
+                          </form>
+                        
+                      </div>
+                    
+
+                    <div class="tab-pane" id="post-generic-content-form">
+                      
+                        <form action="/users/usermessage/" method="POST" class="form-horizontal">
+                          <fieldset>
+                            
+
+
+  <div class="form-group">
+    <label for="id__content_type" class="col-sm-2 control-label">Media type:</label>
+    <div class="col-sm-10">
+      <select name="_content_type" id="id__content_type" data-override="content-type" class="form-control">
+  <option value="application/json" selected>application/json</option>
+
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+
+  <option value="multipart/form-data">multipart/form-data</option>
+
+</select>
+      <span class="help-block"></span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="id__content" class="col-sm-2 control-label">Content:</label>
+    <div class="col-sm-10">
+      <textarea name="_content" id="id__content" rows="10" cols="40" data-override="content" class="form-control">
+{
+    &quot;time&quot;: null,
+    &quot;msgType&quot;: null,
+    &quot;isRead&quot;: false,
+    &quot;content&quot;: &quot;&quot;,
+    &quot;toUser&quot;: null
+}</textarea>
+      <span class="help-block"></span>
+    </div>
+  </div>
+
+
+                            <div class="form-actions">
+                              <button class="btn btn-primary" title="Make a POST request on the User Msg List resource">POST</button>
+                            </div>
+                          </fieldset>
+                        </form>
+                      
+                    </div>
+                  </div>
+                </div>
+              
+
+              
+            
+          
+        </div><!-- /.content -->
+      </div><!-- /.container -->
+    </div><!-- ./wrapper -->
+
+    
+
+    
+      <script>
+        window.drf = {
+          csrfHeaderName: "X-CSRFTOKEN",
+          csrfCookieName: "csrftoken"
+        };
+      </script>
+      <script src="/static/rest_framework/js/jquery-3.3.1.min.js"></script>
+      <script src="/static/rest_framework/js/ajax-form.js"></script>
+      <script src="/static/rest_framework/js/csrf.js"></script>
+      <script src="/static/rest_framework/js/bootstrap.min.js"></script>
+      <script src="/static/rest_framework/js/prettify-min.js"></script>
+      <script src="/static/rest_framework/js/default.js"></script>
+      <script>
+        $(document).ready(function() {
+          $('form').ajaxForm();
+        });
+      </script>
+    
+
+  </body>
+  
+</html>

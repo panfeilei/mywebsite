@@ -49,28 +49,31 @@
     }
     
     function getBlogId(){
-        var reg = /(?<=blog\/)(\d)+/;
-        var r = reg.exec(window.location);
-        console.log(r[0]);
-        return r[0];
+        var r = $('.blog-id').text()
+        return r;
     }
     
     $(function(){
+
         initView();
         initComment();
     })
     
     function initView(){
-        var blogId = getBlogId('id');
+        var blogId = getBlogId();
+        
         $('.comment-form').append('<input type="hidden" name="to_blogId" value=\'' + blogId + '\'>');
         var commentForm = $('.comment-form')[0]
         FormSubmit(commentForm);
-        $.get('http://127.0.0.1:8000/blogInfo/{id}/'.replace('{id}', blogId), function(data, status){
+        $.get('/blogInfo/{id}/'.replace('{id}', blogId), function(data, status){
+            
             blogInfo = data['blogInfo'];
             authorInfo = data['authorInfo'];
-            authorId = authorInfo['authorId'];
+            authorId = authorInfo['UserInfo']['userId'];
             $('.pageActive-item-num').text(blogInfo['favorNum']);
-            $('.author-name').text(authorInfo['UserName']);
+            $('.author-name').text(authorInfo['UserInfo']['name']);
+            $('.avatar_pic').attr('src', authorInfo['UserInfo']['iconUrl']);
+            $('.icon-link').attr('href', '/users/PersonalZone/' + authorInfo['UserInfo']['userId']);
             isIntere = $('.inter-button');
             if(authorInfo['isIntere'] == true){
                 isIntere.addClass('inter-gray-button');
@@ -98,7 +101,7 @@
     
     function getComment_replay(){
         blog_id = getBlogId('id')
-        $.get("/getcomment/{blogid}".replace('{blogid}', blog_id),function(data, status){
+        $.get("/getcomment/{blogid}/".replace('{blogid}', blog_id),function(data, status){
             comment_div = $(".comment-list")
             //comment_json = JSON.parse(data);
             //comment_obj = $(comment_html);
@@ -109,7 +112,7 @@
                 comment_obj.find('.comment-time').text(comment_item['time']);
                 comment_obj.find('.comment-id').text(comment_item['comment_id']);
                 comment_obj.find('.comment-content').text(comment_item['content']);
-                comment_obj.find('.comment-icon').attr('src',comment_item['userInfo']['headlink']);
+                comment_obj.find('.comment-icon').attr('src',comment_item['userInfo']['iconUrl']);
                 var reply_obj = null;
                 for(var reply_item of comment_item.reply_list)
                 {

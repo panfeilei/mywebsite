@@ -10,92 +10,6 @@
         </div>
     </div>
 </div>
-<!-- 		<div class="tab-content">
-
-			<div class="container-fluid tab-pane in active" id="public-blog" style="padding-left: 0px;">
-				<div class="row">
-					<div class="content-wrapper panel panel-default user-home-width">
-						<div class="panel-body">
-							<div class="icon-space">
-								<a class="user-icon" href='#'>
-									<img class="img-circle main-icon"  src={{userinfo.iconUrl}}></img>
-								</a>
-								<div class="upload-logo" data-toggle="modal" data-target="#myModal">
-									<div class="text-muted ">upload Img</div>
-								 </div>
-								 <div class="modal fade" id="myModal" >
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<div class="modal-body"> 
-												<div class="modal-body">
-													<img class="icon-preview"></img>
-												</div>
-												<div class="modal-footer">
-													<div>
-														<div class="btn btn-primary btn-lg file-input">
-														openFile
-														<input type="file"></input>
-														</div>
-														<button  class="btn btn-primary  btn-lg upload-icon">
-															Upload
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="user-personalInfo">
-							<div>
-								<span class="user-title">{{userinfo.name}}</span>
-							</div>
-							<div class="user-signature">This guy is lazy and nothing is left</div>
-							<br>
-							<div class="user-signature">aweerf</div>
-						</div>
-						<div class="user-blogInfo">
-							<div class="score-item">
-							发表文章
-								<p class="score-num">{{bloglist|length}}</p>
-							</div>
-							<div class="score-item">
-							发表评论
-								<p class="score-num">2</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<div class="row">
-					<div class="content-wrapper panel panel-default user-home-width">
-						<div class="panel-body">
-							<div class="content-head">
-								<span>All Blog</span>
-							</div>
-							{% for blog in bloglist%}
-							<div class="tweet-item layout-flex">
-								<a class="user-icon" href="#">
-									<img class="img-circle" src={{userinfo.iconUrl}}></img>
-								</a>
-								<div class="flex-grow">
-									<div>
-										<a class="nickname" href={{blog.link}}>{{blog.title}}</a>
-										<span class="text-muted">{{blog.time}}</span>
-										<div>{{blog.descript}}</div>
-									</div>
-								
-								</div>
-							</div>
-							{% endfor %}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="tab-pane" id="comment">all comment</div>
-		</div>
-		 -->
 <div class="content-wrapper user-home-width">
     <div class="panel panel-default home-user-info">
         <div class='panel-body'>
@@ -103,10 +17,11 @@
 
                 <div class="icon-space">
                     <a class="user-icon1">
-                        <img class='img-circle user-icon' src='/media/head.jpg'></img>
+                        <img class='img-circle user-icon' src={{userinfo.iconUrl}}></img>
                     </a>
+                    {% if not isVisitor %}
                     <div class="upload-logo" data-toggle="modal" data-target="#myModal">
-                        <div class="text-muted ">upload Img</div>
+                        <div class="text-muted ">上传头像</div>
                     </div>
                     <div class="modal fade" id="myModal" >
                         <div class="modal-dialog">
@@ -130,26 +45,62 @@
                             </div>
                         </div>
                     </div>
-
+                    {%endif%}
                 </div>
+                <div class='author-id' hidden>{{userinfo.userId.userId}}</div>
                 <div class='user-name'>
-                    <p> usernmae</p>
+                    <p> {{userinfo.name}}</p>
                 </div>
-
-                <div class="user-blogInfo">
+                
+                <div class="user-blogInfo content-wrapper">
+                    {% if not isVisitor %}
+                    <div class="score-item">
+                                粉丝
+                        <p class="score-num">0</p>
+                    </div>
+                    <div class="score-item">
+                                收藏
+                        <p class="score-num">0</p>
+                    </div>    
+                    {%else%}
                     <div class="score-item">
                                 发表文章
                         <p class="score-num">{{bloglist|length}}</p>
                     </div>
                     <div class="score-item">
                                 发表评论
-                        <p class="score-num">2</p>
+                        <p class="score-num">{{commentsize}}</p>
                     </div>
+                    {%endif%}
                 </div>
 
                 <div class='user-operate'>
+                    {% if not isVisitor %}
+                    <a class='button green interest' href='/editor'>写博客</a>
+                    
+                    
+                    {%else%}
                     <a class='button green interest'>关注</a>
-                    <a class='button send-msg'>发私信</a>
+                    <a class='button send-msg' data-toggle="modal" data-target='#send-modal'>发私信</a> 
+                    <div class="modal fade" id='send-modal'>
+                        <div class='modal-dialog'> 
+                            <div class='modal-content'>
+                                <div class='modal-header'>发消息</div>
+                                <div class='modal-body '>
+                                    <div class='msg-content'>
+                                        <textarea class='msg-editor'></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class='modal-footer'>
+                                    <div class="btn btn-primary btn-lg send-msg-form" data-dismiss="modal">发送</div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    {%endif%}
+
                 </div>
             </div>
 
@@ -158,13 +109,42 @@
     </div>
 
     <div class="panel panel-default home-blog-info" >
-            asd
+        <div class='home-head'>
+            <p>全部博客</p>
+        </div>
+
+        <div class='blog-info'>
+            <div class='blog-list'>
+                
+                {% for blog in bloglist%}
+                <div class='blog-item'>
+                    <div class='blog-title'><a href={{blog.link}}>{{blog.title}}</a></div>
+                    <div class='blog-detail'>{{blog.descript}}</div>
+                    <div class='blog-buttom'>
+                        <span class='blog-time'>{{blog.time}}&nbsp;&nbsp</span>
+                        <span>评论</span>
+                        <span class='blog-comment'>{{blog.comment_list|length}}</span>
+                    </div>
+                </div>
+                {% endfor%}
+            </div>
+        </div>
     </div>
 
 </div>
         {% endblock %}
 
 		{% block Jscontent%}
+            
+            function getAuthorId(){
+                var id = $('.author-id').text();
+                return id;
+            }
+        
+            function getcsrf(cookie){
+                var r = $.cookie('csrftoken');
+                return r;
+            }
             $('.file-input input').change(function(){
                 var file = this.files[0];
                 var reader = new FileReader();
@@ -183,13 +163,32 @@
 
 				});
 			})
-
+            
+            $('.send-msg-form').click(function(){
+                
+                var msgdata = new FormData();
+                var msg = $('.msg-editor').val();
+                console.log(msg);
+                msgdata.append('csrfmiddlewaretoken', getcsrf(document.cookie));
+                msgdata.append('content', msg);
+                msgdata.append('msgType', 'LE');
+                msgdata.append('toUser', getAuthorId());
+                $.ajax({
+                    url:'/users/usermessage/',
+                    type:'POST',
+                    data:msgdata,
+                    processData: false,
+                    contentType: false,
+                    success:function(result){console.log(result);}
+                })
+            })
+            
             $('.upload-icon').click(function(){
                 var img = $('.file-input input')[0];
                 var formdata = new FormData();
                 formdata.append('icon-image', img.files[0]);
                 $.ajax({
-                    url:'/upload-icon/',
+                    url:'/upload-icon/?from=',
                     type:'POST',
                     data:formdata,
                     cache: false,

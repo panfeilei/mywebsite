@@ -15,10 +15,11 @@
                                 <h6>个人资料</h6>
                             </div>
                             <div class="panel-body">
-                                <div class='profile-intro content-wrapper'>
+                                <div class='profile-intro content-wrapper border-gray'>
+                                    
                                     <div class='avatar-box'>
-                                        <a>
-                                            <img class='img-circle avatar_pic' src='http://127.0.0.1:8000/media/head.jpg'>
+                                        <a class='icon-link'>
+                                            <img class='img-circle avatar_pic' src='/media/head.jpg'>
                                             </img>
                                         </a>
                                     </div>
@@ -29,9 +30,10 @@
                                         <a class=' inter-button '>关注</a>
                                     </div>
                                 </div>
-                                <div class='data-info content-wrapper'>
-                                    <div >原创</div>
-                                    <div >评论</div>
+                                <div class='data-info content-wrapper border-gray'>
+                                    <div class=''>关注<p>3</p></div>
+                                    <div class=''>原创<p>3</p></div>
+                                    <div class=''>评论<p>3</p></div>
                                 </div>
                             </div>
                         </div>
@@ -40,8 +42,13 @@
                     <div class='blog-main'>
                         <div class='panel'>
                             <div class='panel-body'>
-                                <div id="BlogTitle" style="width:100%;text-align:center;font-size:30px;">{{Blog.title}}</div>
-                                <div id="BlogContend">{{Blog.content|safe}}</div>
+                                <div class='blog-id' hidden>{{Blog.blogId}}</div>
+                                <div class="blog-title">{{Blog.title}}</div>
+                                <div class="blog-head-info content-head">
+                                    <span class='blog-time'>{{Blog.time|date:'Y-m-d H:i'}}</span>
+                                    <span class='blog-time float-right'>阅读数:{{Blog.readNum}}</span>
+                                </div>
+                                <div class="blog-content">{{Blog.content|safe}}</div>
                                 <div class='Blog-bottom'>
                                     <div class='pageActive conten-center'>
                                         <span class='pageActive-item' onclick="favFun(199, 'fav', this)">
@@ -71,7 +78,7 @@
                                     <ul class="comment-list">
                                         <li class="media" hidden>
                                             <div class="media-left">
-                                                <a>
+                                                <a >
                                                     <img src="/media/head.jpg" class="img-circle" style="width:50px"/>
                                                 </a>
                                             </div>
@@ -120,7 +127,6 @@
 
 {% block Jscontent%}
     
-    var localBlogId = getBlogId();
     favFun = function(userId, action, itemTmp){
         var item = $(itemTmp);
         var itemText = $('.pageActive-item-text');
@@ -131,7 +137,7 @@
         {
             $.ajax({
                 type:'POST',
-                url:'http://127.0.0.1:8000/favourite/',
+                url:'/favourite/',
                 success:function(data,status){
                     if(status == 'success')
                     {
@@ -147,7 +153,7 @@
         else{
             $.ajax({
                 type:'DELETE',
-                url:'http://127.0.0.1:8000/favourite/'+localBlogId+'/',
+                url:'/favourite/'+localBlogId+'/',
                 headers:{
                     'X-CSRFTOKEN':getcsrf(document.cookie)
                 },
@@ -162,12 +168,9 @@
     };
     praFun = function(userId, action, itemTmp){}
 
-    <!-- console.log(document.cookie) -->
     function getcsrf(cookie){
-        var patt = /(?<=csrftoken=)(\w)*/;
-        var matches = patt.exec(cookie)
-        var val = matches[0];
-        return val;
+        var r = $.cookie('csrftoken');
+        return r;
     }
     
     interButtom = $(".inter-button");
@@ -175,7 +178,7 @@
         if(interButtom.text() == '关注'){
             $.ajax({
                 method:'POST',
-                url:'http://127.0.0.1:8000/interest/',
+                url:'/interest/',
                 success:function(data,status){
                     interButtom.text('已关注');
                     interButtom.addClass('inter-gray-button');
@@ -186,7 +189,7 @@
         else if(interButtom.text() == '已关注'){
             $.ajax({
                 method:'DELETE',
-                url:'http://127.0.0.1:8000/interest/'+getAuthorId(),
+                url:'/interest/'+getAuthorId(),
                 headers:{
                     'X-CSRFTOKEN':getcsrf(document.cookie)
                 },

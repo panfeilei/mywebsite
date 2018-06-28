@@ -35,7 +35,7 @@
                             <li><a class="message-interest">关注</a></li>
 						</ul>
 					</span>
-					<a href={% url 'userapp:PersonalZoneUrl' %}>{{ user.username }}</a>
+					<a href={% url 'userapp:PersonalZoneUrl' user.userId%}>{{ user.username }}</a>
 					<a href={% url 'logout' %}>exit</a>
 				</div> 
 				{% else %}

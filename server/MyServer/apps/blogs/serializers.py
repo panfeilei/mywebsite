@@ -3,10 +3,6 @@ from rest_framework import serializers
 from .models import Comment,Blog,Reply,testmedel
 from apps.users.serializers import UserInfoSerializer
 from apps.blogs.models import BlogMessage
-class BlogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Blog
-        fields = '__all__'
 
 class ReplySerializer(serializers.ModelSerializer):
     userInfo = UserInfoSerializer()
@@ -21,6 +17,14 @@ class CommentSerializer(serializers.ModelSerializer):
     time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = Comment
+        fields = '__all__'
+
+class BlogSerializer(serializers.ModelSerializer):
+    authorId = UserInfoSerializer()
+    time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    comment_list = CommentSerializer(many=True)
+    class Meta:
+        model = Blog
         fields = '__all__'
 
 class BlogMsgSerializer(serializers.ModelSerializer):

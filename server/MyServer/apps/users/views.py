@@ -6,27 +6,35 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import generics
 
-from apps.blogs.models import Blog
+from apps.blogs.models import Blog, Comment
 from apps.blogs.models import getFileDict
 from .models import MyUser
 from .serializers import UserMsgSerializer, SysMsgSerializer
 
-from apps.blogs.serializers import BlogMsgSerializer
+from apps.blogs.serializers import BlogMsgSerializer, BlogSerializer
 from apps.users.models import UserInfo
 from .models import SystemMessage, UserMessage
 from apps.blogs.models import BlogMessage
 
-def home(request):
-    userId = request.user.userId
-    print(userId)
+def home(request, userId):
+    visitor = request.user.userId
+
+    if userId == visitor:
+        pass
     u = UserInfo.objects.filter(userId=userId)
     if len(u) == 0:
         print('user is none')
         return HttpResponse("user is none")
     else:
-        blogList = Blog.objects.filter(authorId=userId)
-        print('user icon' + u[0].iconUrl)
-        return render(request, 'users/user-home.html', {'userinfo':u[0], 'bloglist':blogList})
+        b = Blog.objects.filter(authorId=userId)
+        blogList = BlogSerializer(b, many=True)
+        comment = Comment.objects.filter(userInfo=u[0])
+        print(int(userId) != visitor)
+        return render(request, 'users/user-home.html',
+                        {'userinfo':u[0],
+                         'commentsize': len(comment),
+                        'bloglist':blogList.data,
+                        'isVisitor': int(userId) != visitor})
 
 def handleMessage(msg):
     pass
@@ -40,7 +48,7 @@ def getMessage(request):
     usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
     response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg)
     response["comment"] = str(len(blgMsg))
-    response["letter"] = str(len(usrMsg.filter(msgType='CO')))
+    response["letter"] = str(len(usrMsg.filter(msgType='LE')))
     response['interest'] = str(len(usrMsg.filter(msgType='INT')))
     response["sys"] = str(len(sysMsg))
     return JsonResponse(response)
@@ -65,7 +73,7 @@ def apply(request):
         user = MyUser.objects.create_user(username, email, password, userId=id)
         print(user)
         if user:
-            u = UserInfo(name=username, userId=id)
+            u = UserInfo(name=username, userId=user)
             u.save()
             return render(request, 'apply.html',context={'applyStatus':'True'})
         else:
