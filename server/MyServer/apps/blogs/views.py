@@ -123,6 +123,7 @@ def uploadData(request):
                  descript=descript, blogId=blog_id, authorId=autor)
         b.save()
     elif action == "uploadComment":
+        
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
         b = Blog.objects.get(blogId = to_blogId)
