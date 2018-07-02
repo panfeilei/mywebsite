@@ -22,8 +22,7 @@ from django.db.models import F
 from apps.blogs.models import  Blog
 from apps.blogs.models import  Comment, Reply
 from apps.blogs.models import testmedel
-from apps.users.models import UserInfo
-from apps.users.models import MyUser
+from apps.users.models import MyUser, UserInfo, UserMessage
 from .serializers import BlogSerializer,CommentSerializer, ReplySerializer,testModelSerializer
 from apps.operation.models import Favorite, Interest
 from apps.blogs.models import BlogMessage

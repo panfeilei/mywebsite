@@ -1,15 +1,9 @@
 {% extends 'base.html'%}
 {% block Htmlcontent%}
-<div class="row">
-    <div class="mynav">	
-        <div class="content-wrapper user-home-width">
-            <ul class="head-ul">
-                <li  id="user-main" class="nav-curr"><a href="#public-blog">个人主页</a></li>
-                <li id="user-message"><a href="{%url 'userapp:getmessageinfo' %}">消息</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
+<div class='main-content'>
+
+
+
 <div class="content-wrapper user-home-width">
     <div class="panel panel-default home-user-info">
         <div class='panel-body'>
@@ -131,6 +125,7 @@
         </div>
     </div>
 
+</div>
 </div>
         {% endblock %}
 

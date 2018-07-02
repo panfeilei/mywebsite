@@ -392,6 +392,15 @@ width:100%;
 	border-bottom:1px solid #dddddd
 }
 
+.msg-panel
+{
+    margin-top:30px;
+}
+
+.main-content{
+    margin-top:50px;
+}
+
 .unread-item
 {
 	font-weight:bold;

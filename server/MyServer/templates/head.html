@@ -27,7 +27,7 @@
 				{% if user.is_authenticated  %}
 				<div class="navbar-tag">
 					<span class="message-icon">
-						<a class="message-all">消息</a>
+						<a class="message-all" href={%url 'userapp:getmessageinfo' %}>消息</a>
 						<ul class="messageNav-list">
                             <li><a class="message-sys">系统消息</a></li>
                             <li><a class="message-comment">评论</a></li>

@@ -11,14 +11,14 @@
 			</div>
 		</div>
 		
-		<div class="content-wrapper user-home-width">
+		<div class="content-wrapper user-home-width ">
 			<div class="mainindex_l">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<ul class="nav nav-tabs">
-							<li class="active"><a data-toggle="tab" href="#comment">评论</a></li>
-							<li><a data-toggle="tab" href="#letter">私信</a></li>
-                            <li><a data-toggle="tab" href="#interest">关注</a></li>
+						<ul class="nav nav-tabs msg-heading">
+							<li class="comment-tab active"><a data-toggle="tab" href="#comment">评论</a></li>
+							<li ><a class='letter-tab' data-toggle="tab" href="#letter">私信</a></li>
+                            <li ><a data-toggle="tab" href="#interest">关注</a></li>
                             <li><a data-toggle="tab" href="#sysMSg">系统消息</a></li>
 						</ul>
 					</div>
@@ -63,6 +63,13 @@
 		{% endblock %}
 
 		{% block Jscontent%}
+            
+            var tab_index = window.location.hash;
+            console.log(tab_index);
+            if(tab_index == '#letter'){
+                $('.letter-tab').tab('show');
+            }
+        
 			$.get('/users/getmsginfo/', function(data, state){
 				console.log(data);
 				var BlogMsgList = $('.blog-message-list');
