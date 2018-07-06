@@ -80,7 +80,7 @@ def uploadIcon(request):
     return HttpResponse('upload ok')
 
 def test1(request):
-    return render(request, 'test1.html')
+    return render(request, 'users/user-test.html')
 
 @csrf_exempt
 def test(request):

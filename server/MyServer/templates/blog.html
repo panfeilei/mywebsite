@@ -2,6 +2,7 @@
 {% block Headcontent%}
 {% load staticfiles %}
 <script src="{% static "js/Blog.js" %}"></script>
+<script src="{% static "js/Common.js" %}"></script>
 {% endblock %}
 {% block Htmlcontent%}
 <div class="container-fluid" style="padding-left: 0px;">
@@ -146,14 +147,14 @@
                         item.addClass('alreadyFav');
                     }
                 },
-                data:'blogId='+localBlogId+'&csrfmiddlewaretoken=' + getcsrf(document.cookie),
+                data:'blogId='+getBlogId()+'&csrfmiddlewaretoken=' + getcsrf(document.cookie),
             })
             
         }
         else{
             $.ajax({
                 type:'DELETE',
-                url:'/favourite/'+localBlogId+'/',
+                url:'/favourite/'+getBlogId()+'/',
                 headers:{
                     'X-CSRFTOKEN':getcsrf(document.cookie)
                 },
@@ -167,11 +168,6 @@
 
     };
     praFun = function(userId, action, itemTmp){}
-
-    function getcsrf(cookie){
-        var r = $.cookie('csrftoken');
-        return r;
-    }
     
     interButtom = $(".inter-button");
     interButtom.click(function(){

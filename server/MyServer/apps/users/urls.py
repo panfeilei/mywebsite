@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^PersonalZone/(?P<userId>(\d)*)', user_view.home, name='PersonalZoneUrl'),
     url(r'^apply/', user_view.apply, name='apply'),
     url(r'^getMessage', user_view.getMessage),
+    url(r'^favourite', user_view.MyFavourite, name='favourite'),
+    url(r'^followers', user_view.follower, name='follower'),
     url(r'^getmessageinfo/', user_view.getMessageInfo, name='getmessageinfo'),
 
 ]

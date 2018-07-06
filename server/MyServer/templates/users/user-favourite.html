@@ -1,0 +1,40 @@
+﻿{% extends 'users/user-info-base.html' %}
+{% block show-content%}
+<div class='home-head'>
+    <p>我的收藏</p>
+</div>
+<div class="blog-list">
+    <ul class='list-style-none'>
+        {%for fav in myFavourite%}
+        <li class='border-gray favourite-item horizontal-center'>
+            <span>
+                <a class='favourite-title' href={{fav.blogId.link}}>{{fav.blogId.title}}</a>
+            </span>
+            <a id='blog-id' hidden>{{fav.blogId.blogId}}</a>
+            <span class='float-right remove-btn' onclick='DelFavor(this)'>取消收藏</span>
+        </li>
+        {%endfor%}
+    </ul>
+    
+</div>
+{%endblock%}
+
+{% block Jscontent%}
+    var DelFavor = function(item){
+        var itemClass = $(item).parent();
+        var id = itemClass.find('#blog-id').text();
+        $.ajax({
+            url:'/favourite/'+id+'/',
+            type:'DELETE',
+            headers:{
+                    'X-CSRFTOKEN':getcsrf(document.cookie)
+                },
+            success:function(result){
+                console.log(result);
+                itemClass.remove()
+                
+            }
+        
+        })
+    }
+{%endblock%}

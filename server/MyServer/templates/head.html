@@ -19,31 +19,43 @@
                 </li>
                 <li><a href="">tab2</a></li>
             </ul>
-			<div class="mynavbar-right">
-				<form class="navbar-form" >
-					<input type="text" id="nav-serach"></input>
-					<button type="submit" class="btn  btn-primary">Search</button>
-				</form>
+            <div class="mynavbar-right">
+                <form class="navbar-form" >
+                    <input type="text" id="nav-serach"></input>
+                    <button type="submit" class="btn  btn-primary">Search</button>
+                </form>
 				{% if user.is_authenticated  %}
-				<div class="navbar-tag">
-					<span class="message-icon">
-						<a class="message-all" href={%url 'userapp:getmessageinfo' %}>消息</a>
-						<ul class="messageNav-list">
+                <div class="navbar-tag content-nowrap">
+                    <span class="message-icon" id='message-item'>
+                        <a class="message-all" href={%url 'userapp:getmessageinfo' %}>消息</a>
+                        <ul class="messageNav-list" id='message-list'>
                             <li><a class="message-sys">系统消息</a></li>
                             <li><a class="message-comment">评论</a></li>
-							<li><a class="message-letter">私信</a></li>
-                            <li><a class="message-interest">关注</a></li>
-						</ul>
-					</span>
-					<a href={% url 'userapp:PersonalZoneUrl' user.userId%}>{{ user.username }}</a>
-					<a href={% url 'logout' %}>exit</a>
-				</div> 
+                            <li><a class="message-letter">私信</a></li>
+                            <li><a class="message-fans">粉丝</a></li>
+                            <li><a class="message-interest" href={% url 'userapp:follower'%}>关注的人</a></li>
+                        </ul>
+                    </span>
+
+                    <span id='my-item'>
+                        <a href={% url 'userapp:PersonalZoneUrl' user.userId%}>我的</a>
+                        <div>
+                            <ul class="messageNav-list" id='my-list'>
+                                <li><a class="my-fav" href={%url 'userapp:favourite'%}>收藏</a></li>
+                                <li><a class="my-blog">帖子</a></li>
+                            </ul>
+                        </div>
+                    </span>
+                    <span>
+                        <a href={% url 'logout' %}>exit</a>
+                    </span>
+                </div> 
 				{% else %}
-				<a class="btn  btn-link" href="/login">login</a>
-				<a class="btn  btn-link" href={%url 'userapp:apply'%}>register</a>
+                <a class="btn  btn-link" href="/login">login</a>
+                <a class="btn  btn-link" href={%url 'userapp:apply'%}>register</a>
 				{% endif %}
-			</div>
-            
+            </div>
+
         </div>
     </div>
 </nav>

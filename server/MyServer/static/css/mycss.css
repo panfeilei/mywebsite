@@ -9,6 +9,11 @@
     z-index:3;
 }
 
+.favourite-title
+{
+    font-weight: 700;
+    color:black;
+}
 .profile-intro
 {
     padding-bottom:20px;
@@ -96,6 +101,8 @@ width:100%;
 {
     margin:10px 0px;
 }
+
+
 .float-right
 {
     float:right;
@@ -207,6 +214,22 @@ width:100%;
     margin:0 auto;
 }
 
+.blog-item h2
+{
+    font-size: 16px;
+    margin:0px;
+    padding:0px;
+    
+}
+
+
+.content-nowrap
+{
+    display:flex;
+    flex-wrap: nowrap;
+    
+}
+
 .home-blog-info
 {
     width:800px;
@@ -316,15 +339,27 @@ width:100%;
 	border-bottom: solid 1px #ddd;
 }
 
-.message-icon:hover  .messageNav-list
+#message-item:hover  #message-list
 {
 	display:inline-block;
+	max-height:160px; 
+}
+
+#my-item:hover  #my-list
+{
+    	display:inline-block;
 	max-height:160px; 
 }
 
 .messageNav-list li
 {
 	padding:5px;
+}
+
+.list-style-none
+{
+    list-style-type: none;
+    padding-left:0px;   
 }
 
 .messageNav-list
@@ -364,7 +399,7 @@ width:100%;
 .navbar-tag
 {
 	float:right;
-	display:inline-block;
+    margin-right:80px;
 }
 .text-muted {
     font-size: 10px;
@@ -529,6 +564,13 @@ width:100%;
     flex-direction:column;
 }
 
+.horizontal-center
+{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
 .content-wrapper
 {
     display:flex;
@@ -639,15 +681,43 @@ width:100%;
     text-align: center;
 }
 
+.follower-blog
+{
+    padding:10px 0px;
+    
+}
+
+.user-item
+{
+    margin-left:10px;
+    width:100%;
+}
+
+.remove-btn
+{
+    text-align: center;
+    border: 1px solid rgba(34,36,38,.15);
+    padding: .78571429em 1.5em .78571429em;
+    font-size: .78571429em;
+    cursor: pointer;
+}
+
 .user-operate .green
 {
     background-color: #32aa66;
     color: #fff;
 }
 
+.favourite-item
+{
+    width:100%;
+    padding:15px 0px;
+}
+
 .border-gray
 {
     border-bottom:1px solid #d4d4d5;
+    
 }
 
 .user-operate .send-msg

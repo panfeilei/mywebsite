@@ -1,4 +1,9 @@
 ﻿{% extends 'base.html'%}
+{% block Headcontent %}
+{% load staticfiles %}
+<script src="{% static "js/Common.js" %}"></script>
+{% endblock %}
+
 {% block Htmlcontent%}
 <div class='main-content'>
 <div class="content-wrapper user-home-width">
@@ -47,7 +52,7 @@
                     {% if not isVisitor %}
                     <div class="score-item">
                                 粉丝
-                        <p class="score-num">{{fans|length}}</p>
+                        <p class="score-num">0</p>
                     </div>
                     <div class="score-item">
                                 收藏
@@ -68,6 +73,7 @@
                 <div class='user-operate'>
                     {% if not isVisitor %}
                     <a class='button green interest' href='/editor'>写博客</a>
+                    
                     
                     {%else%}
                     <a class='button green interest'>关注</a>
@@ -99,26 +105,7 @@
     </div>
 
     <div class="panel panel-default home-blog-info" >
-        <div class='home-head'>
-            <p>全部博客</p>
-        </div>
-
-        <div class='blog-info'>
-            <div class='blog-list'>
-                
-                {% for blog in bloglist%}
-                <div class='blog-item'>
-                    <div class='blog-title'><a href={{blog.link}}>{{blog.title}}</a></div>
-                    <div class='blog-detail'>{{blog.descript}}</div>
-                    <div class='blog-buttom'>
-                        <span class='blog-time'>{{blog.time}}&nbsp;&nbsp</span>
-                        <span>评论</span>
-                        <span class='blog-comment'>{{blog.comment_list|length}}</span>
-                    </div>
-                </div>
-                {% endfor%}
-            </div>
-        </div>
+        {% block show-content%}{%endblock%}
     </div>
 
 </div>

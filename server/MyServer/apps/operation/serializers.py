@@ -5,7 +5,6 @@ class FavorSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
-    
     class Meta:
         model = Favorite
         fields = '__all__'

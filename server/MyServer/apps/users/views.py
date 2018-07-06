@@ -1,4 +1,5 @@
 import random
+from functools import reduce
 
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
@@ -10,34 +11,45 @@ from apps.blogs.models import Blog, Comment
 from apps.blogs.models import getFileDict
 from .models import MyUser
 from .serializers import UserMsgSerializer, SysMsgSerializer
-
 from apps.blogs.serializers import BlogMsgSerializer, BlogSerializer
 from apps.users.models import UserInfo
 from .models import SystemMessage, UserMessage
 from apps.blogs.models import BlogMessage
+from apps.operation.models import Interest,Favorite
 
-def home(request, userId):
+def UserInfoWrapper(func):
+    def _wrapper(request, **kw):
+        Context = {}
+        u = UserInfo.objects.filter(userId=request.user)
+        if len(u) == 0:
+            print('user is none')
+            return HttpResponse("user is none")
+        else:
+            fans = Interest.objects.filter(toUserId=request.user)
+            Context['userinfo'] = u[0]
+            Context['fans'] = fans
+            return func(request, **kw, Context=Context)
+    return _wrapper
+
+@UserInfoWrapper
+def home(request, userId, Context):
     visitor = request.user.userId
+    b = Blog.objects.filter(authorId=userId)
+    blogList = BlogSerializer(b, many=True)
+    comment = Comment.objects.filter(userInfo=Context['userinfo'])
+    Context['commentsize']= len(comment)
+    Context['bloglist'] = blogList.data
+    Context['isVisitor'] = int(userId) != visitor
+    return render(request, 'users/user-home.html',Context)
 
-    if userId == visitor:
-        pass
-    u = UserInfo.objects.filter(userId=userId)
-    if len(u) == 0:
-        print('user is none')
-        return HttpResponse("user is none")
-    else:
-        b = Blog.objects.filter(authorId=userId)
-        blogList = BlogSerializer(b, many=True)
-        comment = Comment.objects.filter(userInfo=u[0])
-        print(int(userId) != visitor)
-        return render(request, 'users/user-home.html',
-                        {'userinfo':u[0],
-                         'commentsize': len(comment),
-                        'bloglist':blogList.data,
-                        'isVisitor': int(userId) != visitor})
+@UserInfoWrapper
+def MyFavourite(request, Context):
+    myFav = Favorite.objects.filter(user=request.user)
+    Context['myFavourite'] = myFav
+    return render(request, 'users/user-favourite.html', Context)
 
-def handleMessage(msg):
-    pass
+def countQuery(item1, item2):
+    return len(item1)+len(item2)
 
 def getMessage(request):
     userId = request.user.userId
@@ -46,12 +58,33 @@ def getMessage(request):
     blgMsg = BlogMessage.objects.filter(toUser=user, isRead=False)
     sysMsg = SystemMessage.objects.filter(toUser=user, isRead=False)
     usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
-    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg)
+    inte = Interest.objects.filter(user=request.user)
+    tt = [Blog.objects.filter(authorId=i.toUserId.UserInfo, time__gt=i.time) for i in inte]
+    interest = 0
+    if len(tt)>0:
+        interest = reduce(countQuery, tt)
+    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg) + interest
     response["comment"] = str(len(blgMsg))
     response["letter"] = str(len(usrMsg.filter(msgType='LE')))
-    response['interest'] = str(len(usrMsg.filter(msgType='INT')))
+    response['interest'] = interest
     response["sys"] = str(len(sysMsg))
+    response["fans"] = str(len(usrMsg.filter(msgType='INT')))
     return JsonResponse(response)
+
+@UserInfoWrapper
+def follower(request, Context):
+    userId = request.user.userId
+    u = UserInfo.objects.filter(userId=userId)
+    inte = Interest.objects.filter(user=request.user)
+    tt = [Blog.objects.filter(authorId=i.toUserId.UserInfo, time__gt=i.time) for i in inte]
+    data = [BlogSerializer(t, many=True) for t in tt]
+    for d in data:
+        print(d.data)
+    comment = Comment.objects.filter(userInfo=u[0])
+    return render(request, 'users/user-follower.html',
+                    {'userinfo':u[0],
+                     'commentsize': len(comment),
+                     'followerBlog':tt})
 
 def getMessageInfo(request):
     return render(request, 'users/user-msg.html')

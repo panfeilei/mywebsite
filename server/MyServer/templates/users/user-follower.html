@@ -1,0 +1,35 @@
+{% extends 'users/user-info-base.html' %}
+{% block show-content%}
+<div class='home-head'>
+    <p>我的关注</p>
+</div>
+<div class="blog-info">
+    <div class='blog-list'>
+        {%for userItem in followerBlog%}
+        <div class='blog-item content-nowrap'>
+            <div class="head-img">
+                <a>
+                    <img class="img-circle" src={{userItem.0.authorId.iconUrl}}>
+                    </img>
+                </a>
+            </div>
+
+            <div class='user-item'>
+                {% for blog in userItem%}
+                <div class='follower-blog border-gray'>
+                    <span>
+                        <span >{{blog.authorId.name}}</span>
+                        <span class='blog-time'>{{blog.time|date:"Y.m.d"}}</span>
+                    </span>
+
+                    <h2><a>{{blog.title}}</a></h2>
+                    <div>{{blog.descript}}</div>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{%endblock%}
+
