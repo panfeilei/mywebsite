@@ -172,6 +172,13 @@ def index(request):
 class BlogViewSet(viewsets.ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+    lookup_field = 'blogId'
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        print(kwargs)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()

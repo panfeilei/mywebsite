@@ -687,6 +687,11 @@ width:100%;
     
 }
 
+.follower-blog:last-child
+{
+    border:none;
+}
+
 .user-item
 {
     margin-left:10px;

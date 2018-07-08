@@ -2,8 +2,10 @@ import random
 from functools import reduce
 
 from django.http import HttpResponse,JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_list_or_404
 from rest_framework import viewsets
+from django.db.models import F
+from django.utils.timezone import now
 from rest_framework.response import Response
 from rest_framework import generics
 
@@ -59,7 +61,7 @@ def getMessage(request):
     sysMsg = SystemMessage.objects.filter(toUser=user, isRead=False)
     usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
     inte = Interest.objects.filter(user=request.user)
-    tt = [Blog.objects.filter(authorId=i.toUserId.UserInfo, time__gt=i.time) for i in inte]
+    tt = [Blog.objects.filter(authorId=i.toUserId.UserInfo, time__gt=i.lastCheckTime) for i in inte]
     interest = 0
     if len(tt)>0:
         interest = reduce(countQuery, tt)
@@ -73,18 +75,16 @@ def getMessage(request):
 
 @UserInfoWrapper
 def follower(request, Context):
-    userId = request.user.userId
-    u = UserInfo.objects.filter(userId=userId)
     inte = Interest.objects.filter(user=request.user)
+    print('update interest')
     tt = [Blog.objects.filter(authorId=i.toUserId.UserInfo, time__gt=i.time) for i in inte]
-    data = [BlogSerializer(t, many=True) for t in tt]
-    for d in data:
-        print(d.data)
-    comment = Comment.objects.filter(userInfo=u[0])
-    return render(request, 'users/user-follower.html',
-                    {'userinfo':u[0],
-                     'commentsize': len(comment),
-                     'followerBlog':tt})
+    myInterest = list(filter(len, tt))
+    comment = Comment.objects.filter(userInfo=Context['userinfo'])
+    Context['commentsize'] = len(comment)
+    Context['followerBlog'] = myInterest
+    inte.update(lastCheckTime=now())
+    print(myInterest)
+    return render(request, 'users/user-follower.html', Context)
 
 def getMessageInfo(request):
     return render(request, 'users/user-msg.html')
@@ -122,6 +122,7 @@ class UserMsgViewSet(viewsets.ModelViewSet):
     serializer_class = UserMsgSerializer
     queryset = UserMessage.objects.all()
     lookup_field = 'toUser'
+
 
 class AllMsgViewSet(viewsets.GenericViewSet):
     def list(self, request, *args, **kwargs):
