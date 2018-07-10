@@ -61,11 +61,13 @@ def getMessage(request):
     sysMsg = SystemMessage.objects.filter(toUser=user, isRead=False)
     usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
     inte = Interest.objects.filter(user=request.user)
-    tt = [Blog.objects.filter(authorId=i.toUserId.UserInfo, time__gt=i.lastCheckTime) for i in inte]
+    tt = [Blog.objects.filter(authorId=i.toUserId, time__gt=i.lastCheckTime) for i in inte]
     interest = 0
-    if len(tt)>0:
+    if len(tt)>2:
         interest = reduce(countQuery, tt)
-    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg) + interest
+    elif len(tt) == 1:
+        interest = 1
+    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg)
     response["comment"] = str(len(blgMsg))
     response["letter"] = str(len(usrMsg.filter(msgType='LE')))
     response['interest'] = interest

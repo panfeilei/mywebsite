@@ -1,12 +1,16 @@
 from django.db import models
 
-from apps.users.models import UserInfo
+from apps.users.models import UserInfo, MyUser
 # Create your models here.
 
+class Category(models.Model):
+    categoryId = models.CharField(primary_key=True,unique=True,max_length=100)
+    name = models.CharField(max_length=50, null=False, blank=False)
 
 class Blog(models.Model):
     blogId = models.CharField(primary_key=True,unique=True,max_length=100)
     title = models.CharField(max_length=50, null=False, blank=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='blogs',  db_column='category')
     authorId = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='userbloglist', db_column='authorId')
     link = models.URLField()
     descript =  models.CharField(max_length=100,null=True)

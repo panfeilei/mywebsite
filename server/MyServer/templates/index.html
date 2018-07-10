@@ -1,49 +1,45 @@
 {% extends 'base.html'%}
 {% load myfilter%}
 {% block Htmlcontent%}
-        <div class="container-fluid" style="padding-left: 0px;">
-            <div class="row">
-                <div class="col-xs-2 col-md-2">
-                    <ul id="mainlist">
-                        <li>
-                            <a href="#">img1</a>
-                            <ul id="innerul">
-                                <li>item1</li>
-                                <li>item2</li>
-                                <li>item3</li>
-                            </ul>
-                        </li>
-                        <li><a href="#">img2</a>
-                        </li>
-                        <li><a href="#">img3</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-xs-6 col-md-6">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-12" >
-                            <div style="border-bottom:solid 2px black;margin:8px;">
-                                <label>最新</label>
-                                <a style="float:right">more>></a>
-                            </div>
-                            <ul class="NewList" style="list-style:none;">
+<div class='main-content'>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="panel blog-nav">
+                <ul>
+                    <li class='nav-active'>
+                        <a>asdasdf</a>
+                    </li>
+                    <li><a>asfasd</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-6 col-md-6  panel">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12" >
+                        <div style="border-bottom:solid 2px black;margin:8px;">
+                            <label>最新</label>
+                            <a style="float:right">more>></a>
+                        </div>
+                        <div class='index-new-list'>
+                            <ul class="list-border-gray" >
                                 {% for newblog in blog_list%}
                                 <li>
-                                    <div class="newly-list-item content-head">
-                                        <a class="NewListItemTitle" href={% url 'blogUrl' newblog.blogId %}>{{newblog.title}}</a>
-                                        <p class="blog-detail">{{newblog.descript}}</p>
+                                    <div class="newly-list-item border-gray">
+                                        <div class='index-list-item-blog'>
+                                            <a class="index-blog-title" href={% url 'blogUrl' newblog.blogId %}>{{newblog.title}}</a>
+                                            <p class="blog-detail">{{newblog.descript}}</p>
+                                        </div>
                                         <div class='blog-author-info'>
                                             <span class="head-img">
                                                 <a>
                                                     <img class='img-circle' src={{newblog.authorId.iconUrl}}></img>
                                                 </a>
                                             </span>
-                                            
+
                                             <span class='blog-author-username'><p>{{newblog.authorId.name}}</p></span>
                                             <span><p class='blog-time'>{{newblog.time|mytimesince}}</p></span>
                                             <span class='float-right'>{{newblog.readNum}} 阅读</span>
                                         </div>
-                                        
+
                                     </div>
                                 </li>
                                 {% endfor%}
@@ -52,8 +48,38 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-            sadasd
-            </div>
+
         </div>
+
+        <!-- <div class="row">
+            <div class='forum panel'>
+                <div class='forum-head'>
+                </div>
+                <div class='forum-module'>
+                    <div class='forum-module-head border-gray'>
+                        <h4>学习小组</h4>
+                    </div>
+                    <div class='forum-module-main'>
+                        <ul class='module-list'>
+                            <li>
+                                <div class='module-img'>
+                                </div>
+                                <dl>
+                                    <dt><a>学习小组</a></dt>
+                                    <dd>帖数:99</dd>
+                                    <dd>总帖数</dd>
+                                </dl>
+                            </li>
+                            
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+
+
+</div>
 {% endblock %}

@@ -1,37 +1,71 @@
-
 {% extends 'base.html'%}
+{% block Headcontent %}
+{% load staticfiles %}
+<script src="{% static "js/Common.js" %}"></script>
+{% endblock %}
+
 {% block Htmlcontent%}
-<div>
-    Title:
-    <input id="blogTitle"></input>
-    <script id="container" name="content" type="text/plain">
-    </script>
-    <script type="text/javascript" src="/static/js/Ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" src="/static/js/Ueditor/ueditor.all.js"></script>
-    <script type="text/javascript">
-        var editor = UE.getEditor('container');
-        $(function(){
-            $('#blogSubmit').click(function(){
+<div class='container main-content'>
+    <div class='row'>
+        <div class='col-md-12'>
+            <input id="blogTitle" placeholder="文章标题"></input>
+            <div class='editor-box'>
+                <script id="container" name="content" type="text/plain">
+                </script>
+                <script type="text/javascript" src="/static/js/Ueditor/ueditor.config.js"></script>
+                <script type="text/javascript" src="/static/js/Ueditor/ueditor.all.js"></script>
+
+
+
+                <script type="text/javascript">
+                var editor = UE.getEditor('container',{
+                        initialFrameWidth: 1170,
+                        initialFrameHeight:450
+                });
+                </script>
+            </div>
+            <div class='more-info'>
+                <label class='lab-title'>分类:</label>
+                <select class='droBlogType' name='category'>
+                    {%for cate in categoryList%}
+                    <option value={{cate.categoryId}}>{{cate.name}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+            <button class="btn btn-primary" id="blogSubmit">submit</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block Jscontent%}
+    $('#blogSubmit').click(function(){
+                var data = new Date();
+                var title = $("#blogTitle").val();
                  var descript = editor.getContentTxt();
                  var content = editor.getContent();
-                <!-- console.log(tmp);  -->
-                var title = $("#blogTitle").val();
-                $.post("/uploadData/?action=uploadBlog", 
-                    {'title':title,"descript":descript.substring(0,90),"content":content},
-                        function(result){
+                 var cate = $('.droBlogType option:selected').val();
+                var blogData = new FormData();
+                
+                
+                blogData.append('csrfmiddlewaretoken', getcsrf(document.cookie));
+                blogData.append('title',title);
+                blogData.append("descript",descript.substring(0,90));
+                blogData.append("content",content);
+                blogData.append('category',cate);
+                
+                $.ajax({
+                    url:"/uploadData/?action=uploadBlog", 
+                    type:'POST',
+                    data:blogData,
+                    processData: false,
+                    contentType: false,
+                    success:function(result){
                             console.log(result);
                             if(result == 'no login'){
                                 window.location.href = {%url 'login'%};
                             }
-                            
+                        }
                         });
-            });
-        
-        });
-
-    </script>
-    <button class="btn btn-primary" id="blogSubmit">
-    submit
-    </button>
-</div>
-{% endblock %}
+                });
+{%endblock%}

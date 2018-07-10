@@ -25,7 +25,7 @@ from apps.operation import views as operate_view
 from apps.users.views import BlogMsgViewSet
 
 router = DefaultRouter()
-router.register(r'testblogs', test_view.BlogViewSet, base_name='title')
+router.register(r'blogs', test_view.BlogViewSet, base_name='title')
 router.register(r'getcomment', test_view.CommentViewSet, base_name='getcomment1')
 router.register(r'getreply', test_view.ReplyViewSet)
 router.register(r'favourite', operate_view.FavouViewSet)

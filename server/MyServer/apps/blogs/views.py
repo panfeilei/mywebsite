@@ -11,6 +11,7 @@ from django.shortcuts import render,redirect
 from django.template import RequestContext,Template,loader
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.http import QueryDict
 from rest_framework import viewsets
 from rest_framework import generics, mixins
 from rest_framework.response import Response
@@ -18,12 +19,13 @@ from django.views import View
 from django.shortcuts import get_list_or_404
 from django import template
 from django.db.models import F
+from rest_framework import status
 
 from apps.blogs.models import  Blog
-from apps.blogs.models import  Comment, Reply
+from apps.blogs.models import  Comment, Reply, Category
 from apps.blogs.models import testmedel
 from apps.users.models import MyUser, UserInfo, UserMessage
-from .serializers import BlogSerializer,CommentSerializer, ReplySerializer,testModelSerializer
+from .serializers import BlogSerializer,CommentSerializer, ReplySerializer,testModelSerializer,CategorySerializer
 from apps.operation.models import Favorite, Interest
 from apps.blogs.models import BlogMessage
 from apps.users.serializers import UserInfoSerializer
@@ -52,7 +54,8 @@ def testpost(request):
     return render(request, 'test.html', {'testfiled':t})
 
 def editor(request):
-    return render(request, 'editor.html')
+    categoryList=Category.objects.all()
+    return render(request, 'editor.html', {'categoryList':categoryList})
 
 def blog_view(request,id):
     blogs = Blog.objects.filter(blogId=id)
@@ -116,10 +119,11 @@ def uploadData(request):
         content = request.POST.get('content')
         descript = request.POST.get('descript')
         autor = UserInfo.objects.get(userId=user.userId)
+        cate = Category.objects.get(categoryId=request.POST.get('category'))
         blog_id = str(hash(str(now) + title)).replace('-', '')
-        link = "http://127.0.0.1:8000/blog/%s" %  (blog_id)
+        link = "/blog/%s" %  (blog_id)
         b = Blog(title=title, content=content, link=link,
-                 descript=descript, blogId=blog_id, authorId=autor)
+                 descript=descript, blogId=blog_id, authorId=autor, category=cate)
         b.save()
     elif action == "uploadComment":
         content = request.POST.get('content')
@@ -180,6 +184,25 @@ class BlogViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        now = time.time()
+        title = request.data['title']
+        request.data['fuck'] = '3333'
+        blogId = str(hash(str(now) + title)).replace('-', '')
+        link = "/blog/%s" % (blogId)
+        mydata = {}
+        mydata['link'] = r'http://wwww.baidu.com'
+        mydata['blogId'] = blogId
+        print(request.data)
+        QueryDict.appendlist('link', r'http://wwww.baidu.com')
+        serializer = self.get_serializer(data=mydata)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -206,6 +229,10 @@ class CommentViewSet(viewsets.ModelViewSet):
 class ReplyViewSet(viewsets.ModelViewSet):
     queryset = Reply.objects.all()
     serializer_class = ReplySerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = testmedel.objects.all()
+    serializer_class = testModelSerializer
 
 class testViewSet(viewsets.ModelViewSet):
     queryset = testmedel.objects.all()

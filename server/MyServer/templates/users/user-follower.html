@@ -4,9 +4,9 @@
     <p>我的关注</p>
 </div>
 <div class="blog-info">
-    <div class='blog-list'>
+    <ul class='blog-list list-border-gray'>
         {%for userItem in followerBlog%}
-        <div class='blog-item content-nowrap'>
+        <li class='blog-item content-nowrap '>
             <div class="head-img">
                 <a>
                     <img class="img-circle" src={{userItem.0.authorId.iconUrl}}>
@@ -14,9 +14,9 @@
                 </a>
             </div>
 
-            <div class='user-item'>
+            <ul class='user-item list-border-gray'>
                 {% for blog in userItem%}
-                <div class='follower-blog border-gray'>
+                <li class='follower-blog'>
                     <span>
                         <span >{{blog.authorId.name}}</span>
                         <span class='blog-time'>{{blog.time|date:"Y.m.d"}}</span>
@@ -24,12 +24,12 @@
 
                     <h2><a>{{blog.title}}</a></h2>
                     <div>{{blog.descript}}</div>
-                </div>
+                </li>
                 {%endfor%}
-            </div>
-        </div>
+            </ul>
+        </li>
         {%endfor%}
-    </div>
+    </ul>
 </div>
 {%endblock%}
 

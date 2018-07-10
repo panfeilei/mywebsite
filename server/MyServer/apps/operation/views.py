@@ -28,7 +28,7 @@ class InterViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        uinfo = UserInfo.objects.get(user=request.user)
+        uinfo = UserInfo.objects.get(userId=request.user)
         u = UserMessage(user=request.user, toUser=uinfo, msgType='INT')
         u.save()
         headers = self.get_success_headers(serializer.data)

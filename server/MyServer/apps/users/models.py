@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, AbstractUser
 # Create your models here.
 
 class MyUser(AbstractUser):
-    userId = models.AutoField(unique=True, default=0,primary_key=True)
+    userId = models.AutoField(unique=True, primary_key=True)
 
 class UserInfo(models.Model):
     name = models.CharField(max_length=50, unique=True, default="")
