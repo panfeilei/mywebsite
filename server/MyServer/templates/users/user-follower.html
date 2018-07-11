@@ -9,7 +9,7 @@
         <li class='blog-item content-nowrap '>
             <div class="head-img">
                 <a>
-                    <img class="img-circle" src={{userItem.0.authorId.iconUrl}}>
+                    <img class="img-circle" src={{userItem.0.authorId.UserInfo.iconUrl}}>
                     </img>
                 </a>
             </div>
@@ -18,7 +18,7 @@
                 {% for blog in userItem%}
                 <li class='follower-blog'>
                     <span>
-                        <span >{{blog.authorId.name}}</span>
+                        <span >{{blog.authorId.UserInfo.name}}</span>
                         <span class='blog-time'>{{blog.time|date:"Y.m.d"}}</span>
                     </span>
 

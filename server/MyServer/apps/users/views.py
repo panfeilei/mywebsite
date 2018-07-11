@@ -66,8 +66,8 @@ def getMessage(request):
     if len(tt)>2:
         interest = reduce(countQuery, tt)
     elif len(tt) == 1:
-        interest = 1
-    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg)
+        interest = len(tt[0])
+    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg) + interest
     response["comment"] = str(len(blgMsg))
     response["letter"] = str(len(usrMsg.filter(msgType='LE')))
     response['interest'] = interest
@@ -79,7 +79,7 @@ def getMessage(request):
 def follower(request, Context):
     inte = Interest.objects.filter(user=request.user)
     print('update interest')
-    tt = [Blog.objects.filter(authorId=i.toUserId.UserInfo, time__gt=i.time) for i in inte]
+    tt = [Blog.objects.filter(authorId=i.toUserId, time__gt=i.time) for i in inte]
     myInterest = list(filter(len, tt))
     comment = Comment.objects.filter(userInfo=Context['userinfo'])
     Context['commentsize'] = len(comment)

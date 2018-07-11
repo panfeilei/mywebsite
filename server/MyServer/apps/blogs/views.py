@@ -3,29 +3,24 @@ import os
 import time
 
 from django.conf import settings
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render,redirect
-from django.template import RequestContext,Template,loader
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
-from django.http import QueryDict
 from rest_framework import viewsets
-from rest_framework import generics, mixins
 from rest_framework.response import Response
 from django.views import View
 from django.shortcuts import get_list_or_404
-from django import template
 from django.db.models import F
-from rest_framework import status
 
-from apps.blogs.models import  Blog
-from apps.blogs.models import  Comment, Reply, Category
+from apps.blogs.models import Blog
+from apps.blogs.models import Comment, Reply, Category
 from apps.blogs.models import testmedel
-from apps.users.models import MyUser, UserInfo, UserMessage
-from .serializers import BlogSerializer,CommentSerializer, ReplySerializer,testModelSerializer,CategorySerializer
+from apps.users.models import MyUser, UserInfo
+from .serializers import BlogSerializer, CommentSerializer, ReplySerializer, testModelSerializer
 from apps.operation.models import Favorite, Interest
 from apps.blogs.models import BlogMessage
 from apps.users.serializers import UserInfoSerializer
@@ -35,12 +30,12 @@ MEDIA_PATH = settings.MEDIA_ROOT
 
 def mylogin(request):
     print("get login")
-    username=request.GET.get('user')
-    password=request.GET.get('pwd')
-    u=request.user
+    username = request.GET.get('user')
+    password = request.GET.get('pwd')
+    u = request.user
     print(request.user.id)
     print('ttt')
-    user=authenticate(username=username, password=password)
+    user = authenticate(username=username, password=password)
     if user is not None:
         login(request, user)
         return render(request, 'login.html', context={'loginStatus': 'True'})
@@ -54,18 +49,18 @@ def testpost(request):
     return render(request, 'test.html', {'testfiled':t})
 
 def editor(request):
-    categoryList=Category.objects.all()
+    categoryList = Category.objects.all()
     return render(request, 'editor.html', {'categoryList':categoryList})
 
-def blog_view(request,id):
+def blog_view(request, id):
     blogs = Blog.objects.filter(blogId=id)
-    blogs.update(readNum = F('readNum')+1)
-    blogfrom=request.GET.get('from')
+    blogs.update(readNum=F('readNum')+1)
+    blogfrom = request.GET.get('from')
     if blogfrom == 'message':
         b = BlogMessage.objects.filter(blog=blogs[0])
-        b.update(isRead =True)
+        b.update(isRead=True)
     return render(request, 'blog.html', {'Blog':blogs[0]})
-    
+
 def testView(request):
     return render(request, 'test.html')
 
@@ -75,37 +70,16 @@ def uploadIcon(request):
     print(settings.MEDIA_ROOT)
     icon = request.FILES['icon-image']
     with open(os.path.join(MEDIA_PATH, request.user.username + "-icon.jpg"), 'wb+') as f:
-      for chunk in icon.chunks():
-          f.write(chunk)
-          user = UserInfo.objects.get(userId=request.user.userId)
-          user.iconUrl = '/media/'+request.user.username + '-icon.jpg'
-          user.save()
+        for chunk in icon.chunks():
+            f.write(chunk)
+            user = UserInfo.objects.get(userId=request.user.userId)
+            user.iconUrl = '/media/'+request.user.username + '-icon.jpg'
+            user.save()
     return HttpResponse('upload ok')
 
 def test1(request):
     return render(request, 'users/user-test.html')
 
-@csrf_exempt
-def test(request):
-    print(request.GET)
-    action = request.GET.get('action')
-    print(action)
-    if request.method == 'POST':
-
-        if action == 'uploadimage':
-            img = request.FILES.get('upfile')
-            print(request.FILES)
-            #print(img)
-            #print(settings.MEDIA_ROOT)
-            imgt = open(settings.MEDIA_ROOT+"\\"+img.name, "wb+")
-            for l in img.chunks():
-                imgt.write(l)
-            imgt.close()
-            return HttpResponse('{"state": "SUCCESS","url": "http://127.0.0.1:8000/media/%s","title": "dem_title.jpg", "original": "demo_original.jpg"}' %img.name )
-    t = Template(r'{"imageActionName":"uploadimage","imageFieldName":"upfile","imageMaxSize":2048000,"imageAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"imageCompressEnable":true,"imageCompressBorder":1600,"imageInsertAlign":"none","imageUrlPrefix":"","imagePathFormat":"/upload/{filename}","scrawlActionName":"uploadscrawl","scrawlFieldName":"upfile","scrawlPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","scrawlMaxSize":2048000,"scrawlUrlPrefix":"","scrawlInsertAlign":"none","snapscreenActionName":"uploadimage","snapscreenPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","snapscreenUrlPrefix":"","snapscreenInsertAlign":"none","catcherLocalDomain":["127.0.0.1","localhost","img.baidu.com"],"catcherActionName":"catchimage","catcherFieldName":"source","catcherPathFormat":"\/server\/ueditor\/upload\/image\/{yyyy}{mm}{dd}\/{time}{rand:6}","catcherUrlPrefix":"","catcherMaxSize":2048000,"catcherAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"videoActionName":"uploadvideo","videoFieldName":"upfile","videoPathFormat":"\/server\/ueditor\/upload\/video\/{yyyy}{mm}{dd}\/{time}{rand:6}","videoUrlPrefix":"","videoMaxSize":102400000,"videoAllowFiles":[".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid"],"fileActionName":"uploadfile","fileFieldName":"upfile","filePathFormat":"\/server\/ueditor\/upload\/file\/{yyyy}{mm}{dd}\/{time}{rand:6}","fileUrlPrefix":"","fileMaxSize":51200000,"fileAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp",".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid",".rar",".zip",".tar",".gz",".7z",".bz2",".cab",".iso",".doc",".docx",".xls",".xlsx",".ppt",".pptx",".pdf",".txt",".md",".xml"],"imageManagerActionName":"listimage","imageManagerListPath":"\/server\/ueditor\/upload\/image\/","imageManagerListSize":20,"imageManagerUrlPrefix":"","imageManagerInsertAlign":"none","imageManagerAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp"],"fileManagerActionName":"listfile","fileManagerListPath":"\/server\/ueditor\/upload\/file\/","fileManagerUrlPrefix":"","fileManagerListSize":20,"fileManagerAllowFiles":[".png",".jpg",".jpeg",".gif",".bmp",".flv",".swf",".mkv",".avi",".rm",".rmvb",".mpeg",".mpg",".ogg",".ogv",".mov",".wmv",".mp4",".webm",".mp3",".wav",".mid",".rar",".zip",".tar",".gz",".7z",".bz2",".cab",".iso",".doc",".docx",".xls",".xlsx",".ppt",".pptx",".pdf",".txt",".md",".xml"]}')
-    req = RequestContext(request)
-    return HttpResponse(t.render(req))
-    
 @csrf_exempt
 def uploadData(request):
     action = request.GET.get('action')
@@ -123,12 +97,12 @@ def uploadData(request):
         blog_id = str(hash(str(now) + title)).replace('-', '')
         link = "/blog/%s" %  (blog_id)
         b = Blog(title=title, content=content, link=link,
-                 descript=descript, blogId=blog_id, authorId=autor, category=cate)
+                 descript=descript, blogId=blog_id, authorId=user, category=cate)
         b.save()
     elif action == "uploadComment":
         content = request.POST.get('content')
         to_blogId = request.POST.get('to_blogId')
-        b = Blog.objects.get(blogId = to_blogId)
+        b = Blog.objects.get(blogId=to_blogId)
         userId = request.user.userId
         userInfo = UserInfo.objects.get(userId=userId)
         authoruserInfo = UserInfo.objects.get(userId=request.user)
@@ -162,46 +136,33 @@ def mylogout(request):
     else:
         return HttpResponse('not user')
 
+
+
 @login_required
-def index(request):
-    request.current_app = request.resolver_match.namespace
-    blog = Blog.objects.all()
-    context = {}
-    if blog:
-        blog_list = BlogSerializer(blog, many=True)
-        #print(type(blog_list.data))
-        context = {'blog_list': blog_list.data}
+def index(request, module):
+    currentCategory = None
+    if len(module) == 0:
+        return HttpResponseRedirect('/index/new/')
+    if module == 'new':
+        blogs = Blog.objects.all()
+    else:
+        currentCategory = Category.objects.get(value=module)
+        blogs = Blog.objects.filter(category=currentCategory)
+    category = Category.objects.all()
+    print(blogs[0].category.value)
+    context = {'category':category, 'isAll': currentCategory==None}
+    if blogs:
+        #blog_list = BlogSerializer(blogs, many=True)
+        context['blog_list']= blogs
     return render(request, 'index.html', context)
+
+def defaulInex(request):
+    return HttpResponseRedirect(reverse('index', args=['']))
 
 class BlogViewSet(viewsets.ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
     lookup_field = 'blogId'
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-        print(kwargs)
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-        now = time.time()
-        title = request.data['title']
-        request.data['fuck'] = '3333'
-        blogId = str(hash(str(now) + title)).replace('-', '')
-        link = "/blog/%s" % (blogId)
-        mydata = {}
-        mydata['link'] = r'http://wwww.baidu.com'
-        mydata['blogId'] = blogId
-        print(request.data)
-        QueryDict.appendlist('link', r'http://wwww.baidu.com')
-        serializer = self.get_serializer(data=mydata)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
@@ -209,7 +170,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     lookup_field = 'to_blogId'
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance,many=True)
+        serializer = self.get_serializer(instance, many=True)
         return Response(serializer.data)
 
     def get_object(self):
@@ -252,11 +213,7 @@ class BlogInfo(View):
         BlogNum = Blog.objects.filter(authorId=blog.authorId)
         inter = Interest.objects.filter(Q(toUserId=author), Q(user=user))
         print(userinfo.data)
-        resp['blogInfo'] = {'favorNum': len(fav),
-                            'isFavou':len(isfav) > 0}
-        resp['authorInfo'] = {
-                            'BlogNum': len(BlogNum),
-                            'UserInfo':userinfo.data,
-                            'isIntere': len(inter) >0}
+        resp['blogInfo'] = {'favorNum': len(fav), 'isFavou':len(isfav) > 0}
+        resp['authorInfo'] = {'BlogNum': len(BlogNum), 'UserInfo':userinfo.data, 'isIntere': len(inter) > 0}
         print(str(resp))
         return JsonResponse(resp)

@@ -53,7 +53,11 @@
 					var comment_item = $('.message-sys');
 					appendText(comment_item, '(' + sys + ')');
 				}
-					
+                
+                if(fans > 0){
+					var comment_item = $('.message-fans');
+					appendText(comment_item, '(' + fans + ')');
+				}
 			})
 		});
 		

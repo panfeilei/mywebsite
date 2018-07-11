@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import Comment,Blog,Reply,testmedel,Category
-from apps.users.serializers import UserInfoSerializer
+from apps.users.serializers import UserInfoSerializer, MyUserSerializer
 from apps.blogs.models import BlogMessage
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -20,7 +20,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BlogSerializer(serializers.ModelSerializer):
-    authorId = UserInfoSerializer()
+    authorId = MyUserSerializer()
     time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     comment_list = CommentSerializer(many=True, read_only=True)
 

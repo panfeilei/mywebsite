@@ -4,7 +4,10 @@ register = template.Library()
 @register.filter(name='mytimesince')
 def mytimesince(value):
     from datetime import datetime
-    t = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+    if isinstance(value, str):
+        t = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+    else:
+        t = value
     n = datetime.now()
     dis = n-t
     if(dis.days <= 0):

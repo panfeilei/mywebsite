@@ -4,16 +4,17 @@ from .models import  UserMessage, SystemMessage
 from apps.blogs.models import BlogMessage
 from .models import UserInfo,MyUser
 
-class MyUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MyUser
-        fields = ('userId','username')
-
 class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
         fields = '__all__'
+
+class MyUserSerializer(serializers.ModelSerializer):
+    UserInfo = UserInfoSerializer()
+    class Meta:
+        model = MyUser
+        fields = ('userId','username','UserInfo')
 
 class UserMsgSerializer(serializers.ModelSerializer):
     time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False)

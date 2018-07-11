@@ -6,10 +6,17 @@
         <div class="row">
             <div class="panel blog-nav">
                 <ul>
-                    <li class='nav-active'>
-                        <a>asdasdf</a>
+                    {% for cate in category%}
+                    {%if isAll == True%}
+                    <li {%if cate is category.0%}class='nav-active'{%endif%}>
+                        <a href={% url 'index' cate.value%}>{{cate.name}}</a>
                     </li>
-                    <li><a>asfasd</a></li>
+                    {%else%}
+                    <li {%if blog_list.0.category.value == cate.value%}class='nav-active'{%endif%}>
+                        <a href={% url 'index' cate.value%}>{{cate.name}}</a>
+                    </li>
+                    {%endif%}
+                    {%endfor%}
                 </ul>
             </div>
             <div class="col-xs-6 col-md-6  panel">
@@ -31,11 +38,11 @@
                                         <div class='blog-author-info'>
                                             <span class="head-img">
                                                 <a>
-                                                    <img class='img-circle' src={{newblog.authorId.iconUrl}}></img>
+                                                    <img class='img-circle' src={{newblog.authorId.UserInfo.iconUrl}}></img>
                                                 </a>
                                             </span>
 
-                                            <span class='blog-author-username'><p>{{newblog.authorId.name}}</p></span>
+                                            <span class='blog-author-username'><p>{{newblog.authorId.UserInfo.name}}</p></span>
                                             <span><p class='blog-time'>{{newblog.time|mytimesince}}</p></span>
                                             <span class='float-right'>{{newblog.readNum}} 阅读</span>
                                         </div>
@@ -82,4 +89,12 @@
 
 
 </div>
+{% endblock %}
+
+{% block Jscontent%}
+    $('.blog-nav li').click(function(){
+        var localnav = $('blog-nav li[class="nav-active"]');
+        localnav.removeClass("nav-active");
+        $(this).addClass("nav-active");
+    })
 {% endblock %}

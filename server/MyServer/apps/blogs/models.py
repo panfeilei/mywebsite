@@ -6,12 +6,13 @@ from apps.users.models import UserInfo, MyUser
 class Category(models.Model):
     categoryId = models.CharField(primary_key=True,unique=True,max_length=100)
     name = models.CharField(max_length=50, null=False, blank=False)
+    value = models.CharField(max_length=100)
 
 class Blog(models.Model):
     blogId = models.CharField(primary_key=True,unique=True,max_length=100)
     title = models.CharField(max_length=50, null=False, blank=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='blogs',  db_column='category')
-    authorId = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='userbloglist', db_column='authorId')
+    authorId = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='userbloglist', db_column='authorId')
     link = models.URLField()
     descript =  models.CharField(max_length=100,null=True)
     content = models.TextField()

@@ -27,7 +27,7 @@
             <div class='more-info'>
                 <label class='lab-title'>分类:</label>
                 <select class='droBlogType' name='category'>
-                    {%for cate in categoryList%}
+                    {%for cate in categoryList|slice:'1:'%}
                     <option value={{cate.categoryId}}>{{cate.name}}</option>
                     {%endfor%}
                 </select>

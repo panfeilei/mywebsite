@@ -34,15 +34,14 @@ router.register(r'testview', test_view.testViewSet)
 
 
 urlpatterns = [
-    url(r"^$", test_view.index),
+    url(r"^$", test_view.defaulInex),
     url(r'^', include(router.urls)),
-    url(r"^index", test_view.index),
+    url(r"^index/(?P<module>(\w)*)", test_view.index, name='index'),
     url(r'^admin/', admin.site.urls),
     url(r'^login/', test_view.mylogin, name='login'),
     url(r'^logout/', test_view.mylogout, name='logout'),
     url(r'^uploadData/', test_view.uploadData),
     url(r'^editor/',test_view.editor, name='edi'),
-    url(r'^test/',test_view.test),
     url(r'^test1/', test_view.test1),
     url(r'^blogInfo/(?P<blogId>(\w)*)/', test_view.BlogInfo.as_view()),
     url(r'^blog/(\w+)/', test_view.blog_view, name="blogUrl"),
