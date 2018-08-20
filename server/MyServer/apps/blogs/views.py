@@ -149,7 +149,7 @@ def index(request, module):
         currentCategory = Category.objects.get(value=module)
         blogs = Blog.objects.filter(category=currentCategory)
     category = Category.objects.all()
-    print(blogs[0].category.value)
+    #print(blogs[0].category.value)
     context = {'category':category, 'isAll': currentCategory==None}
     if blogs:
         #blog_list = BlogSerializer(blogs, many=True)
@@ -207,7 +207,8 @@ class BlogInfo(View):
         fav = Favorite.objects.filter(blogId=blogId)
         isfav = fav.filter(user=user.userId)
         blog = Blog.objects.get(blogId=blogId)
-        author = MyUser.objects.get(UserInfo=blog.authorId) #反查
+        #author = MyUser.objects.get(UserInfo=blog.authorId) #反查
+        author = blog.authorId
         authorInfo = UserInfo.objects.get(userId=author)
         userinfo = UserInfoSerializer(authorInfo)
         BlogNum = Blog.objects.filter(authorId=blog.authorId)
