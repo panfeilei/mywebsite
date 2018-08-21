@@ -1,7 +1,7 @@
     const comment_html = '\
         <li class="media"> \
             <div class="media-left">\
-                <a><img src="/media/head.jpg" class="img-circle comment-icon" style="width:50px"/></a>\
+                <a><img src="/media/head.jpg" class="img-circle comment-icon" /></a>\
             </div>\
             <div class="media-body">\
                 <a class="comment-id" hidden>0</a>\

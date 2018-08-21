@@ -21,37 +21,41 @@ from apps.operation.models import Interest,Favorite
 
 def UserInfoWrapper(func):
     def _wrapper(request, **kw):
-        Context = {}
+        context = {}
         u = UserInfo.objects.filter(userId=request.user)
         if len(u) == 0:
             print('user is none')
             return HttpResponse("user is none")
         else:
             fans = Interest.objects.filter(toUserId=request.user)
-            Context['userinfo'] = u[0]
-            Context['fans'] = fans
-            return func(request, **kw, Context=Context)
+            context['userinfo'] = u[0]
+            context['fans'] = fans
+            return func(request, **kw, Context=context)
     return _wrapper
 
+
 @UserInfoWrapper
-def home(request, userId, Context):
+def home(request, userId, context):
     visitor = request.user.userId
     b = Blog.objects.filter(authorId=userId)
     blogList = BlogSerializer(b, many=True)
-    comment = Comment.objects.filter(userInfo=Context['userinfo'])
-    Context['commentsize'] = len(comment)
-    Context['bloglist'] = blogList.data
-    Context['isVisitor'] = int(userId) != visitor
-    return render(request, 'users/user-home.html',Context)
+    comment = Comment.objects.filter(userInfo=context['userinfo'])
+    context['commentsize'] = len(comment)
+    context['bloglist'] = blogList.data
+    context['isVisitor'] = int(userId) != visitor
+    return render(request, 'users/user-home.html',context)
+
 
 @UserInfoWrapper
-def MyFavourite(request, Context):
+def MyFavourite(request, context):
     myFav = Favorite.objects.filter(user=request.user)
-    Context['myFavourite'] = myFav
-    return render(request, 'users/user-favourite.html', Context)
+    context['myFavourite'] = myFav
+    return render(request, 'users/user-favourite.html', context)
+
 
 def countQuery(item1, item2):
     return len(item1)+len(item2)
+
 
 def getMessage(request):
     userId = request.user.userId
@@ -75,32 +79,35 @@ def getMessage(request):
     response["fans"] = str(len(usrMsg.filter(msgType='INT')))
     return JsonResponse(response)
 
+
 @UserInfoWrapper
-def follower(request, Context):
+def follower(request, context):
     inte = Interest.objects.filter(user=request.user)
     print('update interest')
     tt = [Blog.objects.filter(authorId=i.toUserId, time__gt=i.time) for i in inte]
     myInterest = list(filter(len, tt))
-    comment = Comment.objects.filter(userInfo=Context['userinfo'])
-    Context['commentsize'] = len(comment)
-    Context['followerBlog'] = myInterest
+    comment = Comment.objects.filter(userInfo=context['userinfo'])
+    context['commentsize'] = len(comment)
+    context['followerBlog'] = myInterest
     inte.update(lastCheckTime=now())
     print(myInterest)
-    return render(request, 'users/user-follower.html', Context)
+    return render(request, 'users/user-follower.html', context)
+
 
 def getMessageInfo(request):
     return render(request, 'users/user-msg.html')
+
 
 def apply(request):
     if len(request.GET) == 0:
         return render(request, 'apply.html',context={'applyStatus':'False'})
     else:
-        username=request.GET.get('user')
-        password=request.GET.get('pwd')
+        username = request.GET.get('user')
+        password = request.GET.get('pwd')
         repeatpwd = request.GET.get('repwd')
         email = request.GET.get('email')
         id = -1
-        while(id == -1):
+        while id == -1:
             id = random.randint(1,255)
             uu = MyUser.objects.filter(userId = id)
             if uu:
@@ -115,10 +122,12 @@ def apply(request):
             print("apply error")
             return HttpResponse("apply register error")
 
+
 class BlogMsgViewSet(viewsets.ModelViewSet):
     serializer_class = BlogMsgSerializer
     queryset = BlogMessage.objects.all()
     lookup_field = 'toUser'
+
 
 class UserMsgViewSet(viewsets.ModelViewSet):
     serializer_class = UserMsgSerializer
@@ -127,6 +136,7 @@ class UserMsgViewSet(viewsets.ModelViewSet):
 
 
 class AllMsgViewSet(viewsets.GenericViewSet):
+
     def list(self, request, *args, **kwargs):
         uerid = request.user.userId
         blogQuerySet = BlogMessage.objects.filter(toUser=uerid)

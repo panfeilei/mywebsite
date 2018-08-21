@@ -28,6 +28,7 @@ MEDIA_PATH = settings.MEDIA_ROOT
 
 # Create your views here.
 
+
 def mylogin(request):
     print("get login")
     username = request.GET.get('user')
@@ -42,18 +43,23 @@ def mylogin(request):
     else:
         return render(request, 'login.html', context={'loginStatus': 'False'})
 
+
 def testpost(request):
     #print("get user"+request.GET.get('user', ''))
     t = testmedel()
     print("get user")
     return render(request, 'test.html', {'testfiled': t})
 
+
 def editor(request):
     categoryList = Category.objects.all()
     return render(request, 'editor.html', {'categoryList': categoryList})
 
+
 def blog_view(request, id):
     blogs = Blog.objects.filter(blogId=id)
+    #print(type(blogs[0].authorId.UserInfo))
+    #print(blogs[0].authorId.inter_list.count())
     blogs.update(readNum=F('readNum')+1)
     blogfrom = request.GET.get('from')
     if blogfrom == 'message':
@@ -61,8 +67,10 @@ def blog_view(request, id):
         b.update(isRead=True)
     return render(request, 'blog.html', {'Blog': blogs[0]})
 
+
 def testView(request):
     return render(request, 'test.html')
+
 
 @csrf_exempt
 def uploadIcon(request):
@@ -77,8 +85,10 @@ def uploadIcon(request):
             user.save()
     return HttpResponse('upload ok')
 
+
 def test1(request):
     return render(request, 'users/user-test.html')
+
 
 @csrf_exempt
 def uploadData(request):
@@ -127,6 +137,7 @@ def uploadData(request):
         r.save()
     return HttpResponse('ok')
 
+
 def mylogout(request):
     user = request.user
     if user:
@@ -135,7 +146,6 @@ def mylogout(request):
         return redirect('login')
     else:
         return HttpResponse('not user')
-
 
 
 @login_required
@@ -156,18 +166,22 @@ def index(request, module):
         context['blog_list']= blogs
     return render(request, 'index.html', context)
 
+
 def defaulInex(request):
     return HttpResponseRedirect(reverse('index', args=['']))
+
 
 class BlogViewSet(viewsets.ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
     lookup_field = 'blogId'
 
+
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     lookup_field = 'to_blogId'
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, many=True)
@@ -187,13 +201,16 @@ class CommentViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
 
+
 class ReplyViewSet(viewsets.ModelViewSet):
     queryset = Reply.objects.all()
     serializer_class = ReplySerializer
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = testmedel.objects.all()
     serializer_class = testModelSerializer
+
 
 class testViewSet(viewsets.ModelViewSet):
     queryset = testmedel.objects.all()
@@ -201,6 +218,7 @@ class testViewSet(viewsets.ModelViewSet):
 
 
 class BlogInfo(View):
+
     def get(self, request, blogId):
         resp = {}
         user = request.user
