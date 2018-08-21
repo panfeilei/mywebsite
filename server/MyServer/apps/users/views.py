@@ -39,7 +39,7 @@ def home(request, userId, Context):
     b = Blog.objects.filter(authorId=userId)
     blogList = BlogSerializer(b, many=True)
     comment = Comment.objects.filter(userInfo=Context['userinfo'])
-    Context['commentsize']= len(comment)
+    Context['commentsize'] = len(comment)
     Context['bloglist'] = blogList.data
     Context['isVisitor'] = int(userId) != visitor
     return render(request, 'users/user-home.html',Context)

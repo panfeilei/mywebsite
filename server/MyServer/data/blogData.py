@@ -12,7 +12,12 @@ from apps.blogs.models import Blog, Category
 from apps.users.models import MyUser
 from apps.blogs.models import Category
 import json
+import os
 import time
+
+for file in os.listdir('.'):
+    print(file)
+
 with open('category.json', 'r', encoding='utf8') as f:
     for line in f.readlines():
         p = json.loads(line)

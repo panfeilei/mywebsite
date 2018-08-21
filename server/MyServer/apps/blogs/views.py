@@ -46,11 +46,11 @@ def testpost(request):
     #print("get user"+request.GET.get('user', ''))
     t = testmedel()
     print("get user")
-    return render(request, 'test.html', {'testfiled':t})
+    return render(request, 'test.html', {'testfiled': t})
 
 def editor(request):
     categoryList = Category.objects.all()
-    return render(request, 'editor.html', {'categoryList':categoryList})
+    return render(request, 'editor.html', {'categoryList': categoryList})
 
 def blog_view(request, id):
     blogs = Blog.objects.filter(blogId=id)
@@ -59,7 +59,7 @@ def blog_view(request, id):
     if blogfrom == 'message':
         b = BlogMessage.objects.filter(blog=blogs[0])
         b.update(isRead=True)
-    return render(request, 'blog.html', {'Blog':blogs[0]})
+    return render(request, 'blog.html', {'Blog': blogs[0]})
 
 def testView(request):
     return render(request, 'test.html')
@@ -94,10 +94,10 @@ def uploadData(request):
         descript = request.POST.get('descript')
         autor = UserInfo.objects.get(userId=user.userId)
         cate = Category.objects.get(categoryId=request.POST.get('category'))
-        blog_id = str(hash(str(now) + title)).replace('-', '')
-        link = "/blog/%s" %  (blog_id)
+        blogId = str(hash(str(now) + title)).replace('-', '')
+        link = "/blog/%s" % (blogId)
         b = Blog(title=title, content=content, link=link,
-                 descript=descript, blogId=blog_id, authorId=user, category=cate)
+                 descript=descript, blogId=blogId, authorId=user, category=cate)
         b.save()
     elif action == "uploadComment":
         content = request.POST.get('content')
@@ -214,7 +214,7 @@ class BlogInfo(View):
         BlogNum = Blog.objects.filter(authorId=blog.authorId)
         inter = Interest.objects.filter(Q(toUserId=author), Q(user=user))
         print(userinfo.data)
-        resp['blogInfo'] = {'favorNum': len(fav), 'isFavou':len(isfav) > 0}
-        resp['authorInfo'] = {'BlogNum': len(BlogNum), 'UserInfo':userinfo.data, 'isIntere': len(inter) > 0}
+        resp['blogInfo'] = {'favorNum': len(fav), 'isFavou': len(isfav) > 0}
+        resp['authorInfo'] = {'BlogNum': len(BlogNum), 'UserInfo': userinfo.data, 'isIntere': len(inter) > 0}
         print(str(resp))
         return JsonResponse(resp)
