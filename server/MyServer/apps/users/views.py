@@ -22,7 +22,8 @@ from apps.operation.models import Interest,Favorite
 def UserInfoWrapper(func):
     def _wrapper(request, **kw):
         context = {}
-        u = UserInfo.objects.filter(userId=request.user)
+        user = kw['userId']
+        u = UserInfo.objects.filter(userId=user)
         if len(u) == 0:
             print('user is none')
             return HttpResponse("user is none")
@@ -43,7 +44,7 @@ def home(request, userId, context):
     context['commentsize'] = len(comment)
     context['bloglist'] = blogList.data
     context['isVisitor'] = int(userId) != visitor
-    return render(request, 'users/user-home.html',context)
+    return render(request, 'users/user-home.html', context)
 
 
 @UserInfoWrapper
