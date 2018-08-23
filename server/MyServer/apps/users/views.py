@@ -12,7 +12,7 @@ from rest_framework import generics
 from apps.blogs.models import Blog, Comment
 from apps.blogs.models import getFileDict
 from .models import MyUser
-from .serializers import UserMsgSerializer, SysMsgSerializer
+from .serializers import UserMsgSerializer, SysMsgSerializer, UserMsgSerializerGet
 from apps.blogs.serializers import BlogMsgSerializer, BlogSerializer
 from apps.users.models import UserInfo
 from .models import SystemMessage, UserMessage
@@ -130,7 +130,13 @@ class BlogMsgViewSet(viewsets.ModelViewSet):
     lookup_field = 'toUser'
 
 
-class UserMsgViewSet(viewsets.ModelViewSet):
+class UserMsgViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = UserMsgSerializerGet
+    queryset = UserMessage.objects.all()
+    lookup_field = 'toUser'
+
+
+class UserSendMsgViewSet(viewsets.ModelViewSet):
     serializer_class = UserMsgSerializer
     queryset = UserMessage.objects.all()
     lookup_field = 'toUser'
@@ -144,7 +150,7 @@ class AllMsgViewSet(viewsets.GenericViewSet):
         userQuerySet = UserMessage.objects.filter(toUser=uerid)
         sysQuerySet = SystemMessage.objects.filter(toUser=uerid)
         blogSerializer = BlogMsgSerializer(blogQuerySet, many=True)
-        userSerializer = UserMsgSerializer(userQuerySet, many=True)
+        userSerializer = UserMsgSerializerGet(userQuerySet, many=True)
         sysSerializer = SysMsgSerializer(sysQuerySet, many=True)
         resp = {'blog': blogSerializer.data,
                 'user': userSerializer.data,

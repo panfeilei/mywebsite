@@ -17,17 +17,27 @@ class MyUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyUser
-        fields = ('userId','username','UserInfo')
+        fields = ('userId', 'username', 'UserInfo')
 
 
 class UserMsgSerializer(serializers.ModelSerializer):
+    time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False)
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = UserMessage
+        fields = '__all__'
+
+
+class UserMsgSerializerGet(serializers.ModelSerializer):
     time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False)
     user = MyUserSerializer()
 
     class Meta:
         model = UserMessage
         fields = '__all__'
-
 
 class SysMsgSerializer(serializers.ModelSerializer):
     time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')

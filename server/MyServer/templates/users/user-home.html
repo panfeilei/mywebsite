@@ -164,8 +164,9 @@
                 msgdata.append('content', msg);
                 msgdata.append('msgType', 'LE');
                 msgdata.append('toUser', getAuthorId());
+                msgdata.append('user', {{user.userId}});
                 $.ajax({
-                    url:'/users/usermessage/',
+                    url:'/users/sendmessage/',
                     type:'POST',
                     data:msgdata,
                     processData: false,

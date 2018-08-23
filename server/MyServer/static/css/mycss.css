@@ -269,6 +269,7 @@ select.droBlogType
 
 .blog-title
 {
+    font-weight:bold;
     width:100%;
     font-size:22px;
 }

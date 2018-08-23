@@ -2,12 +2,13 @@ from django.conf.urls import url,include
 from apps.users import views as user_view
 from rest_framework.routers import DefaultRouter
 
-from .views import BlogMsgViewSet,AllMsgViewSet, UserMsgViewSet
+from .views import BlogMsgViewSet,AllMsgViewSet, UserMsgViewSet, UserSendMsgViewSet
 app_name = 'polls'
 
 router = DefaultRouter()
 router.register(r'getmsginfo', AllMsgViewSet, base_name='allmsg')
 router.register(r'usermessage', UserMsgViewSet, base_name='usermsg')
+router.register(r'sendmessage', UserSendMsgViewSet, base_name='usermsg')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
