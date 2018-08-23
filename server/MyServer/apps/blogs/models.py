@@ -16,7 +16,7 @@ class Blog(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='blogs',  db_column='category')
     authorId = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='userbloglist', db_column='authorId')
     link = models.URLField()
-    descript = models.CharField(max_length=100,null=True)
+    descript = models.CharField(max_length=200, null=True)
     content = models.TextField()
     readNum = models.IntegerField(default=0)
     time = models.DateTimeField(auto_now=True)

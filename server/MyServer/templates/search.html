@@ -1,0 +1,51 @@
+{% extends 'base.html'%}
+{% block Headcontent%}
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class='search-main'>
+                    <div class='page-head'>
+                        <form method="GET" action="/searchblog/">
+                            <input type="text" name="key" value={{key}} />
+                            <button type="submit" class="btn main-color">搜索</button>
+                        </form>
+                    </div>
+                    <p>搜索结果</p>
+                    <div class="panel">
+                        <div class='panel-body'>
+                            <div class='search-body'>
+                                {% for item in filter.qs%}
+                                <dl class='search-item'>
+                                    <dt class="title">
+                                        <a href={{item.link}}>{{item.title}}</a>   
+                                    </dt>                                                                
+                                    <dd class='meta'>作者:<a>{{item.authorId}}</a>&nbsp;&nbsp;&nbsp;日期:{{item.time|date:'Y-m-d H:i'}}&nbsp;&nbsp;&nbsp;浏览: {{item.readNum}}次</dd>
+                                    <dd class='detail'>{{item.descript}}</dd>
+                                </dl>
+                                {%endfor%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}
+
+{% block Jscontent%}
+    String.prototype.replaceAll = function(s1,s2){
+　　return this.replace(new RegExp(s1,"gm"),s2);
+　　}
+    var searchItem = $('.search-item');
+    for( var item in searchItem.toArray())
+    {
+
+        var title = $(searchItem[item]).find('dt a');
+        var titleStr = title.text();
+        var oldstr = '{{key}}';
+        var newstr = titleStr.replaceAll(oldstr, '<em>'+oldstr+'</em>');
+        console.log(newstr);
+        title.html(newstr);
+    }
+    
+{%endblock%}

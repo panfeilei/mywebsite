@@ -20,8 +20,8 @@
                 <li><a href="">论坛</a></li>
             </ul>
             <div class="mynavbar-right">
-                <form class="navbar-form" >
-                    <input type="text" id="nav-serach"></input>
+                <form class="navbar-form" method='GET' action='/searchblog/'>
+                    <input type="text" id="nav-serach" name='key'></input>
                     <button type="submit" class="btn  btn-primary">Search</button>
                 </form>
 				{% if user.is_authenticated  %}

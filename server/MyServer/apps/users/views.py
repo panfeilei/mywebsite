@@ -30,7 +30,7 @@ def UserInfoWrapper(func):
             fans = Interest.objects.filter(toUserId=request.user)
             context['userinfo'] = u[0]
             context['fans'] = fans
-            return func(request, **kw, Context=context)
+            return func(request, **kw, context=context)
     return _wrapper
 
 

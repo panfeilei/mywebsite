@@ -15,6 +15,7 @@ from rest_framework.response import Response
 from django.views import View
 from django.shortcuts import get_list_or_404
 from django.db.models import F
+import django_filters
 
 from apps.blogs.models import Blog
 from apps.blogs.models import Comment, Reply, Category
@@ -26,8 +27,23 @@ from apps.blogs.models import BlogMessage
 from apps.users.serializers import UserInfoSerializer
 MEDIA_PATH = settings.MEDIA_ROOT
 
-# Create your views here.
 
+class BlogFilter(django_filters.FilterSet):
+    key = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+    content = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Blog
+        fields = {'title', 'content'}
+
+
+def serachblog(request):
+    result = BlogFilter(request.GET)
+    key = request.GET['key']
+
+    for b in result.qs:
+        print(type(b.time))
+        return render(request, 'search.html', {'filter': result, 'key': key})
 
 def mylogin(request):
     print("get login")
@@ -69,7 +85,7 @@ def blog_view(request, id):
 
 
 def testView(request):
-    return render(request, 'test.html')
+    return render(request, 'search.html')
 
 
 @csrf_exempt
@@ -87,7 +103,7 @@ def uploadIcon(request):
 
 
 def test1(request):
-    return render(request, 'users/user-test.html')
+    return render(request, 'search.html')
 
 
 @csrf_exempt

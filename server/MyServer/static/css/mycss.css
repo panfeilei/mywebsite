@@ -9,15 +9,71 @@
     z-index:3;
 }
 
+a:hover
+{
+    text-decoration:none;
+}
+
 ul{
 padding:0px;
 margin:0px;
+}
+
+.main-color
+{
+    background-color:#767070;
+    color:#fff;
 }
 
 .comment-icon
 {
     height:45px;
     width :45px;
+}
+.search-main
+{
+    width:820px;
+}
+
+.page-head
+{
+    margin-bottom:12px;
+    
+}
+.search-item
+{
+    margin-top:15px;
+    margin-bottom:25px;
+}
+
+.search-item meta
+{
+    margin-bottom:3px;
+}
+
+.search-item dt
+{
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 7px;
+    font-weight: normal;
+}
+
+.search-item dt em
+{
+    font-style: normal;
+    color:red;
+}
+
+.page-head button
+{
+    width:8%;
+}
+
+.page-head input
+{
+    width:90%;
+    height: 32px;
 }
 
 .favourite-title
@@ -53,11 +109,7 @@ margin:0px;
 {
     margin:20px;
 }
-.blog-title
-{
-    font-size:16px;
-    font-weight:bold;
-}
+
 
 .author-name
 {
@@ -219,7 +271,7 @@ select.droBlogType
 {
     width:100%;
     text-align:center;
-    font-size:30px;
+    font-size:22px;
 }
 
 .blog-head-info

@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^uploadData/', test_view.uploadData),
     url(r'^editor/',test_view.editor, name='edi'),
     url(r'^test1/', test_view.test1),
+    url(r'searchblog', test_view.serachblog),
     url(r'^blogInfo/(?P<blogId>(\w)*)/', test_view.BlogInfo.as_view()),
     url(r'^blog/(\w+)/', test_view.blog_view, name="blogUrl"),
     url(r'^upload-icon/', test_view.uploadIcon, name='uploadIconUrl'),
