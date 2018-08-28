@@ -57,7 +57,8 @@
                                             <span class='pageActive-item-num'>0</span>
                                         </span>
                                         <a class='pageActive-item' onclick="userev(199, 'praise', this)">点赞</a>
-                                    </div>
+                                        <a class='pageActive-item download' href='/download/?file=test.rar'>下载</a>
+                                    </div> 
                                     
                                 </div>
                             </div>
@@ -127,7 +128,6 @@
 {% endblock %}
 
 {% block Jscontent%}
-    
     favFun = function(userId, action, itemTmp){
         var item = $(itemTmp);
         var itemText = $('.pageActive-item-text');

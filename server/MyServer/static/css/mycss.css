@@ -19,6 +19,18 @@ padding:0px;
 margin:0px;
 }
 
+.login
+{
+    width:500px;
+}
+
+.warning-label
+{
+    margin:0px;
+    color:red;
+    font-size:14px;
+}
+
 .main-color
 {
     background-color:#767070;

@@ -1,6 +1,9 @@
 import json
 import os
 import time
+import random
+import string
+from io import BytesIO
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
@@ -15,7 +18,10 @@ from rest_framework.response import Response
 from django.views import View
 from django.shortcuts import get_list_or_404
 from django.db.models import F
+from PIL import Image, ImageDraw, ImageFont
 import django_filters
+from django.core.cache import cache
+from django.http import StreamingHttpResponse
 
 from apps.blogs.models import Blog
 from apps.blogs.models import Comment, Reply, Category
@@ -36,6 +42,23 @@ class BlogFilter(django_filters.FilterSet):
         model = Blog
         fields = {'title', 'content'}
 
+@csrf_exempt
+def download(request):
+    def file_iterator(file_name, chunk_size=2048):
+        with open(file_name, 'rb') as f:
+            while True:
+                c = f.read(chunk_size)
+                if c:
+                    yield c
+                else:
+                    break
+    filename = request.GET['file']
+    print(filename)
+    response = StreamingHttpResponse(file_iterator('media/download/{0}'.format(filename)))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(filename)
+    return response
+
 
 def serachblog(request):
     result = BlogFilter(request.GET)
@@ -45,23 +68,73 @@ def serachblog(request):
         print(type(b.time))
         return render(request, 'search.html', {'filter': result, 'key': key})
 
-def mylogin(request):
-    print("get login")
-    username = request.GET.get('user')
-    password = request.GET.get('pwd')
-    u = request.user
-    print(request.user.id)
-    print('ttt')
+
+def getRandomStr():
+    '''获取一个随机字符串，每个字符的颜色也是随机的'''
+    random_num = str(random.randint(0, 9))
+    random_low_alpha = chr(random.randint(97, 122))
+    random_upper_alpha = chr(random.randint(65, 90))
+    random_char = random.choice([random_num, random_low_alpha, random_upper_alpha])
+    return random_char
+
+
+def getRandomColor():
+    c1 = random.randint(0, 250)
+    c2 = random.randint(0, 250)
+    c3 = random.randint(0, 250)
+    return c1, c2, c3
+
+
+def create_code_img(request):
+    image = Image.new('RGB', (100, 20), (216, 216, 220))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype("C:\Windows\Fonts\Corbel.ttf", size=16)
+    key = ''
+    cache.delete(request.GET['key']+'.jpg')
+    for i in range(4):
+        random_char = getRandomStr()
+        key += random_char
+        draw.text((10 + i * 20, 0), random_char, getRandomColor(), font=font)
+    cache.set(request.GET['key'], key.lower())
+    f = BytesIO()
+    image.save(f, 'jpeg')
+    cache.set(request.GET['key']+'.jpg', f.getvalue())
+    f.close()
+    return HttpResponse(cache.get(request.GET['key']+'.jpg'), 'image/jpeg')
+
+
+def verify(request):
+    username = request.POST.get('user')
+    password = request.POST.get('pwd')
+    captchCode = request.POST.get('captcha')
+    if cache.get(request.POST['captch_key']) != captchCode.lower():
+        return loginView(request, '验证码错误')
+        #return redirect('/login/?warning=captch')
     user = authenticate(username=username, password=password)
     if user is not None:
         login(request, user)
-        return render(request, 'login.html', context={'loginStatus': 'True'})
     else:
-        return render(request, 'login.html', context={'loginStatus': 'False'})
+        return loginView(request, '账号密码错误')
+        #return redirect('/login/?warning=account')
+    return loginView(request)
+
+
+def loginView(request, warning=''):
+    captchKey = ''
+    #warningDict = {'captch': '验证码错误', 'account': '账号密码错误'}
+    #warningKey = request.GET.get('warning', '')
+    #warningText = warningDict.get(warningKey, '')
+    #print(warningKey)
+    for i in range(5):
+        captchKey += random.choice(string.ascii_letters)
+    if request.user.is_authenticated:
+        status = 'True'
+    else:
+        status = 'False'
+    return render(request, 'login.html', context={'loginStatus': status, 'captchKey': captchKey, 'warning': warning})
 
 
 def testpost(request):
-    #print("get user"+request.GET.get('user', ''))
     t = testmedel()
     print("get user")
     return render(request, 'test.html', {'testfiled': t})
@@ -74,8 +147,6 @@ def editor(request):
 
 def blog_view(request, id):
     blogs = Blog.objects.filter(blogId=id)
-    #print(type(blogs[0].authorId.UserInfo))
-    #print(blogs[0].authorId.inter_list.count())
     blogs.update(readNum=F('readNum')+1)
     blogfrom = request.GET.get('from')
     if blogfrom == 'message':

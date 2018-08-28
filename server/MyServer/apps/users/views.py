@@ -59,25 +59,26 @@ def countQuery(item1, item2):
 
 
 def getMessage(request):
-    userId = request.user.userId
     response = {}
-    user = UserInfo.objects.get(userId=userId)
-    blgMsg = BlogMessage.objects.filter(toUser=user, isRead=False)
-    sysMsg = SystemMessage.objects.filter(toUser=user, isRead=False)
-    usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
-    inte = Interest.objects.filter(user=request.user)
-    tt = [Blog.objects.filter(authorId=i.toUserId, time__gt=i.lastCheckTime) for i in inte]
-    interest = 0
-    if len(tt)>2:
-        interest = reduce(countQuery, tt)
-    elif len(tt) == 1:
-        interest = len(tt[0])
-    response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg) + interest
-    response["comment"] = str(len(blgMsg))
-    response["letter"] = str(len(usrMsg.filter(msgType='LE')))
-    response['interest'] = interest
-    response["sys"] = str(len(sysMsg))
-    response["fans"] = str(len(usrMsg.filter(msgType='INT')))
+    if request.user.is_authenticated:
+        userId = request.user.userId
+        user = UserInfo.objects.get(userId=userId)
+        blgMsg = BlogMessage.objects.filter(toUser=user, isRead=False)
+        sysMsg = SystemMessage.objects.filter(toUser=user, isRead=False)
+        usrMsg = UserMessage.objects.filter(toUser=user, isRead=False)
+        inte = Interest.objects.filter(user=request.user)
+        tt = [Blog.objects.filter(authorId=i.toUserId, time__gt=i.lastCheckTime) for i in inte]
+        interest = 0
+        if len(tt)>2:
+            interest = reduce(countQuery, tt)
+        elif len(tt) == 1:
+            interest = len(tt[0])
+        response["all"] = len(sysMsg) + len(blgMsg) + len(usrMsg) + interest
+        response["comment"] = str(len(blgMsg))
+        response["letter"] = str(len(usrMsg.filter(msgType='LE')))
+        response['interest'] = interest
+        response["sys"] = str(len(sysMsg))
+        response["fans"] = str(len(usrMsg.filter(msgType='INT')))
     return JsonResponse(response)
 
 

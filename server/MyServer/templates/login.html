@@ -1,16 +1,41 @@
 
 {% extends 'base.html'%}
 {% block Htmlcontent%}
-        {% if loginStatus == 'True' %}
-        <p>login Success</p>
-        {%else%}
+
+<div class='conten-center login'>
+    {% if loginStatus == 'True' %}
+    <p>login Success</p>
+    {%else%}
+    <form action="{%url 'verify'%}" method="post">
         {%csrf_token %}
-        <form action="{%url 'login'%}" method="get">
-            Username:<input type="text"  name="user"></input>
-            Password:<input type="text" name="pwd" ></input>
-            <input type="submit" value="login"></input>
-        </form>
-        {% endif %}
+        <div>Username:<input type="text"  name="user"/>
+        </div>
+        <div>Password:<input type="text" name="pwd"/>
+        </div>
+        <input name='captch_key' value='{{captchKey}}' hidden/>
+        <div>Captcha:
+            <input type="text" name="captcha"/>
+            <img class='captcha' src='/verifytcode/?key={{captchKey}}' onclick="refresh_check_code(this)"/>
+        </div>
+        <p class='warning-label'>{{warning}}</p>
+        <input type="submit" value="login"/>
+    </form>
+    {% endif %}
+</div>
+
+<script>
+    function refresh_check_code(ths) {
+        
+        $.ajax({
+            method: 'GET',
+            url: $(ths).attr('src'),
+            success:function(data,status){
+                console.log('click'); 
+                $(ths).attr('src', $(ths).attr('src')+'');
+            }
+        
+        })
+}
+</script>
 {%endblock%}
 
-    
