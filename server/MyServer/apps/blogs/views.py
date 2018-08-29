@@ -70,7 +70,6 @@ def serachblog(request):
 
 
 def getRandomStr():
-    '''获取一个随机字符串，每个字符的颜色也是随机的'''
     random_num = str(random.randint(0, 9))
     random_low_alpha = chr(random.randint(97, 122))
     random_upper_alpha = chr(random.randint(65, 90))
@@ -189,7 +188,6 @@ def uploadData(request):
         title = request.POST.get('title')
         content = request.POST.get('content')
         descript = request.POST.get('descript')
-        autor = UserInfo.objects.get(userId=user.userId)
         cate = Category.objects.get(categoryId=request.POST.get('category'))
         blogId = str(hash(str(now) + title)).replace('-', '')
         link = "/blog/%s" % (blogId)
