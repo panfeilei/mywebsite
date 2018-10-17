@@ -1,4 +1,4 @@
-from django.conf.urls import url,include
+from django.conf.urls import url, include
 from apps.users import views as user_view
 from rest_framework.routers import DefaultRouter
 

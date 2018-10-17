@@ -22,6 +22,7 @@ from PIL import Image, ImageDraw, ImageFont
 import django_filters
 from django.core.cache import cache
 from django.http import StreamingHttpResponse
+from django_redis import get_redis_connection
 
 from apps.blogs.models import Blog
 from apps.blogs.models import Comment, Reply, Category
@@ -120,6 +121,9 @@ def verify(request):
 
 def loginView(request, warning=''):
     captchKey = ''
+    conn = get_redis_connection("default")
+    user_ip = request.META['REMOTE_ADDR']
+    conn.hincrby('vistor', user_ip, 1)
     #warningDict = {'captch': '验证码错误', 'account': '账号密码错误'}
     #warningKey = request.GET.get('warning', '')
     #warningText = warningDict.get(warningKey, '')

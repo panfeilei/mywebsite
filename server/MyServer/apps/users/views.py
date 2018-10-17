@@ -8,6 +8,7 @@ from django.db.models import F
 from django.utils.timezone import now
 from rest_framework.response import Response
 from rest_framework import generics
+from django.contrib.auth.models import Group, Permission
 
 from apps.blogs.models import Blog, Comment
 from apps.blogs.models import getFileDict
@@ -22,7 +23,8 @@ from apps.operation.models import Interest,Favorite
 def UserInfoWrapper(func):
     def _wrapper(request, **kw):
         context = {}
-        user = kw['userId']
+        user = kw.get('userId', request.user)
+        print(user)
         u = UserInfo.objects.filter(userId=user)
         if len(u) == 0:
             print('user is none')
@@ -38,6 +40,7 @@ def UserInfoWrapper(func):
 @UserInfoWrapper
 def home(request, userId, context):
     visitor = request.user.userId
+
     b = Blog.objects.filter(authorId=userId)
     blogList = BlogSerializer(b, many=True)
     comment = Comment.objects.filter(userInfo=context['userinfo'])
@@ -85,14 +88,12 @@ def getMessage(request):
 @UserInfoWrapper
 def follower(request, context):
     inte = Interest.objects.filter(user=request.user)
-    print('update interest')
     tt = [Blog.objects.filter(authorId=i.toUserId, time__gt=i.time) for i in inte]
     myInterest = list(filter(len, tt))
     comment = Comment.objects.filter(userInfo=context['userinfo'])
     context['commentsize'] = len(comment)
     context['followerBlog'] = myInterest
     inte.update(lastCheckTime=now())
-    print(myInterest)
     return render(request, 'users/user-follower.html', context)
 
 
@@ -102,7 +103,7 @@ def getMessageInfo(request):
 
 def apply(request):
     if len(request.GET) == 0:
-        return render(request, 'apply.html',context={'applyStatus':'False'})
+        return render(request, 'apply.html', context={'applyStatus': 'False'})
     else:
         username = request.GET.get('user')
         password = request.GET.get('pwd')
@@ -111,10 +112,13 @@ def apply(request):
         id = -1
         while id == -1:
             id = random.randint(1,255)
-            uu = MyUser.objects.filter(userId = id)
+            uu = MyUser.objects.filter(userId=id)
+            g = Group(name='seller')
+            g.save()
             if uu:
                 id = -1
         user = MyUser.objects.create_user(username, email, password, userId=id)
+
         print(user)
         if user:
             u = UserInfo(name=username, userId=user)

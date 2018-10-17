@@ -28,11 +28,14 @@ DEFAULT_CHARSET='utf-8'
 ALLOWED_HOSTS = []
 #STATIC_ROOT = os.path.join(BASE_DIR,'static')
 MEDIA_URL="/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
+
+#STATIC_URL = 'http://127.0.0.1:8000/static/'    #仅用作html模板中的static关键字
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static') #只有在收集静态文件用到
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR,'static'),
+    os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, "media"),
 )
 
@@ -110,9 +113,16 @@ DATABASES = {
 }
 
 CACHES = {
-    "default": {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+    # "default": {
+        # 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        # 'LOCATION': 'unique-snowflake',
+    # }
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': "redis://localhost:6379",
+        'OPTION': {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 

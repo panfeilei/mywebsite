@@ -6,22 +6,20 @@
 </head>
 <body>
 
-<select class='se'>
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="opel">Opel</option>
-  <option value="audi">Audi</option>
-</select>
-  <button class='bu'>ss</button>
 </body>
 
 <script>
     $(function(){
-        $('.bu').click(function(){
-            var s = $('.se option:selected').val();
-            console.log(s);
-        });
-    
+        var text = {};
+
+        if(text['con'])
+        {
+            console.log('text');
+        }
+        else{
+            console.log('none');
+        }
+        
     })
 </script>
 </html>
